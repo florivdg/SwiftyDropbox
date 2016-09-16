@@ -266,10 +266,10 @@ public class Files {
         public func deserialize(json: JSON) -> GetMetadataArg {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .Null)
-                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .Null)
-                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .number(0))
+                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .number(0))
+                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
                     return GetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers)
                 default:
                     fatalError("Type error deserializing")
@@ -306,11 +306,11 @@ public class Files {
         public func deserialize(json: JSON) -> AlphaGetMetadataArg {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .Null)
-                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .Null)
-                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .Null)
-                    let includePropertyTemplates = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["include_property_templates"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .number(0))
+                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .number(0))
+                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
+                    let includePropertyTemplates = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["include_property_templates"] ?? .null)
                     return AlphaGetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includePropertyTemplates: includePropertyTemplates)
                 default:
                     fatalError("Type error deserializing")
@@ -443,11 +443,11 @@ public class Files {
         public func deserialize(json: JSON) -> CommitInfo {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let mode = Files.WriteModeSerializer().deserialize(dict["mode"] ?? .Null)
-                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .Null)
-                    let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .Null)
-                    let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let mode = Files.WriteModeSerializer().deserialize(dict["mode"] ?? Files.WriteModeSerializer().serialize(.add))
+                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .number(0))
+                    let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .null)
+                    let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .number(0))
                     return CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
                 default:
                     fatalError("Type error deserializing")
@@ -483,12 +483,12 @@ public class Files {
         public func deserialize(json: JSON) -> CommitInfoWithProperties {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let mode = Files.WriteModeSerializer().deserialize(dict["mode"] ?? .Null)
-                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .Null)
-                    let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .Null)
-                    let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .Null)
-                    let propertyGroups = NullableSerializer(ArraySerializer(Properties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let mode = Files.WriteModeSerializer().deserialize(dict["mode"] ?? Files.WriteModeSerializer().serialize(.add))
+                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .number(0))
+                    let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .null)
+                    let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .number(0))
+                    let propertyGroups = NullableSerializer(ArraySerializer(Properties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .null)
                     return CommitInfoWithProperties(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
                 default:
                     fatalError("Type error deserializing")
@@ -519,7 +519,7 @@ public class Files {
         public func deserialize(json: JSON) -> CreateFolderArg {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
                     return CreateFolderArg(path: path)
                 default:
                     fatalError("Type error deserializing")
@@ -586,7 +586,7 @@ public class Files {
         public func deserialize(json: JSON) -> DeleteArg {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
                     return DeleteArg(path: path)
                 default:
                     fatalError("Type error deserializing")
@@ -745,10 +745,10 @@ public class Files {
         public func deserialize(json: JSON) -> DeletedMetadata {
             switch json {
                 case .Dictionary(let dict):
-                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
-                    let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .Null)
-                    let pathDisplay = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_display"] ?? .Null)
-                    let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .Null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .null)
+                    let pathDisplay = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_display"] ?? .null)
+                    let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .null)
                     return DeletedMetadata(name: name, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId)
                 default:
                     fatalError("Type error deserializing")
@@ -784,8 +784,8 @@ public class Files {
         public func deserialize(json: JSON) -> Dimensions {
             switch json {
                 case .Dictionary(let dict):
-                    let height = Serialization._UInt64Serializer.deserialize(dict["height"] ?? .Null)
-                    let width = Serialization._UInt64Serializer.deserialize(dict["width"] ?? .Null)
+                    let height = Serialization._UInt64Serializer.deserialize(dict["height"] ?? .null)
+                    let width = Serialization._UInt64Serializer.deserialize(dict["width"] ?? .null)
                     return Dimensions(height: height, width: width)
                 default:
                     fatalError("Type error deserializing")
@@ -821,8 +821,8 @@ public class Files {
         public func deserialize(json: JSON) -> DownloadArg {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let rev = NullableSerializer(Serialization._StringSerializer).deserialize(dict["rev"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let rev = NullableSerializer(Serialization._StringSerializer).deserialize(dict["rev"] ?? .null)
                     return DownloadArg(path: path, rev: rev)
                 default:
                     fatalError("Type error deserializing")
@@ -943,19 +943,19 @@ public class Files {
         public func deserialize(json: JSON) -> FileMetadata {
             switch json {
                 case .Dictionary(let dict):
-                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
-                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .Null)
-                    let clientModified = NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["client_modified"] ?? .Null)
-                    let serverModified = NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["server_modified"] ?? .Null)
-                    let rev = Serialization._StringSerializer.deserialize(dict["rev"] ?? .Null)
-                    let size = Serialization._UInt64Serializer.deserialize(dict["size"] ?? .Null)
-                    let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .Null)
-                    let pathDisplay = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_display"] ?? .Null)
-                    let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .Null)
-                    let mediaInfo = NullableSerializer(Files.MediaInfoSerializer()).deserialize(dict["media_info"] ?? .Null)
-                    let sharingInfo = NullableSerializer(Files.FileSharingInfoSerializer()).deserialize(dict["sharing_info"] ?? .Null)
-                    let propertyGroups = NullableSerializer(ArraySerializer(Properties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .Null)
-                    let hasExplicitSharedMembers = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["has_explicit_shared_members"] ?? .Null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
+                    let clientModified = NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["client_modified"] ?? .null)
+                    let serverModified = NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["server_modified"] ?? .null)
+                    let rev = Serialization._StringSerializer.deserialize(dict["rev"] ?? .null)
+                    let size = Serialization._UInt64Serializer.deserialize(dict["size"] ?? .null)
+                    let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .null)
+                    let pathDisplay = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_display"] ?? .null)
+                    let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .null)
+                    let mediaInfo = NullableSerializer(Files.MediaInfoSerializer()).deserialize(dict["media_info"] ?? .null)
+                    let sharingInfo = NullableSerializer(Files.FileSharingInfoSerializer()).deserialize(dict["sharing_info"] ?? .null)
+                    let propertyGroups = NullableSerializer(ArraySerializer(Properties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .null)
+                    let hasExplicitSharedMembers = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["has_explicit_shared_members"] ?? .null)
                     return FileMetadata(name: name, id: id, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId, mediaInfo: mediaInfo, sharingInfo: sharingInfo, propertyGroups: propertyGroups, hasExplicitSharedMembers: hasExplicitSharedMembers)
                 default:
                     fatalError("Type error deserializing")
@@ -985,7 +985,7 @@ public class Files {
         public func deserialize(json: JSON) -> SharingInfo {
             switch json {
                 case .Dictionary(let dict):
-                    let readOnly = Serialization._BoolSerializer.deserialize(dict["read_only"] ?? .Null)
+                    let readOnly = Serialization._BoolSerializer.deserialize(dict["read_only"] ?? .null)
                     return SharingInfo(readOnly: readOnly)
                 default:
                     fatalError("Type error deserializing")
@@ -1023,9 +1023,9 @@ public class Files {
         public func deserialize(json: JSON) -> FileSharingInfo {
             switch json {
                 case .Dictionary(let dict):
-                    let readOnly = Serialization._BoolSerializer.deserialize(dict["read_only"] ?? .Null)
-                    let parentSharedFolderId = Serialization._StringSerializer.deserialize(dict["parent_shared_folder_id"] ?? .Null)
-                    let modifiedBy = NullableSerializer(Serialization._StringSerializer).deserialize(dict["modified_by"] ?? .Null)
+                    let readOnly = Serialization._BoolSerializer.deserialize(dict["read_only"] ?? .null)
+                    let parentSharedFolderId = Serialization._StringSerializer.deserialize(dict["parent_shared_folder_id"] ?? .null)
+                    let modifiedBy = NullableSerializer(Serialization._StringSerializer).deserialize(dict["modified_by"] ?? .null)
                     return FileSharingInfo(readOnly: readOnly, parentSharedFolderId: parentSharedFolderId, modifiedBy: modifiedBy)
                 default:
                     fatalError("Type error deserializing")
@@ -1074,14 +1074,14 @@ public class Files {
         public func deserialize(json: JSON) -> FolderMetadata {
             switch json {
                 case .Dictionary(let dict):
-                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
-                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .Null)
-                    let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .Null)
-                    let pathDisplay = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_display"] ?? .Null)
-                    let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .Null)
-                    let sharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["shared_folder_id"] ?? .Null)
-                    let sharingInfo = NullableSerializer(Files.FolderSharingInfoSerializer()).deserialize(dict["sharing_info"] ?? .Null)
-                    let propertyGroups = NullableSerializer(ArraySerializer(Properties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .Null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
+                    let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .null)
+                    let pathDisplay = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_display"] ?? .null)
+                    let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .null)
+                    let sharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["shared_folder_id"] ?? .null)
+                    let sharingInfo = NullableSerializer(Files.FolderSharingInfoSerializer()).deserialize(dict["sharing_info"] ?? .null)
+                    let propertyGroups = NullableSerializer(ArraySerializer(Properties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .null)
                     return FolderMetadata(name: name, id: id, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId, sharedFolderId: sharedFolderId, sharingInfo: sharingInfo, propertyGroups: propertyGroups)
                 default:
                     fatalError("Type error deserializing")
@@ -1129,11 +1129,11 @@ public class Files {
         public func deserialize(json: JSON) -> FolderSharingInfo {
             switch json {
                 case .Dictionary(let dict):
-                    let readOnly = Serialization._BoolSerializer.deserialize(dict["read_only"] ?? .Null)
-                    let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .Null)
-                    let sharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["shared_folder_id"] ?? .Null)
-                    let traverseOnly = Serialization._BoolSerializer.deserialize(dict["traverse_only"] ?? .Null)
-                    let noAccess = Serialization._BoolSerializer.deserialize(dict["no_access"] ?? .Null)
+                    let readOnly = Serialization._BoolSerializer.deserialize(dict["read_only"] ?? .null)
+                    let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .null)
+                    let sharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["shared_folder_id"] ?? .null)
+                    let traverseOnly = Serialization._BoolSerializer.deserialize(dict["traverse_only"] ?? .number(0))
+                    let noAccess = Serialization._BoolSerializer.deserialize(dict["no_access"] ?? .number(0))
                     return FolderSharingInfo(readOnly: readOnly, parentSharedFolderId: parentSharedFolderId, sharedFolderId: sharedFolderId, traverseOnly: traverseOnly, noAccess: noAccess)
                 default:
                     fatalError("Type error deserializing")
@@ -1164,7 +1164,7 @@ public class Files {
         public func deserialize(json: JSON) -> GetCopyReferenceArg {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
                     return GetCopyReferenceArg(path: path)
                 default:
                     fatalError("Type error deserializing")
@@ -1248,9 +1248,9 @@ public class Files {
         public func deserialize(json: JSON) -> GetCopyReferenceResult {
             switch json {
                 case .Dictionary(let dict):
-                    let metadata = Files.MetadataSerializer().deserialize(dict["metadata"] ?? .Null)
-                    let copyReference = Serialization._StringSerializer.deserialize(dict["copy_reference"] ?? .Null)
-                    let expires = NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["expires"] ?? .Null)
+                    let metadata = Files.MetadataSerializer().deserialize(dict["metadata"] ?? .null)
+                    let copyReference = Serialization._StringSerializer.deserialize(dict["copy_reference"] ?? .null)
+                    let expires = NSDateSerializer("%Y-%m-%dT%H:%M:%SZ").deserialize(dict["expires"] ?? .null)
                     return GetCopyReferenceResult(metadata: metadata, copyReference: copyReference, expires: expires)
                 default:
                     fatalError("Type error deserializing")
@@ -1281,7 +1281,7 @@ public class Files {
         public func deserialize(json: JSON) -> GetTemporaryLinkArg {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
                     return GetTemporaryLinkArg(path: path)
                 default:
                     fatalError("Type error deserializing")
@@ -1360,8 +1360,8 @@ public class Files {
         public func deserialize(json: JSON) -> GetTemporaryLinkResult {
             switch json {
                 case .Dictionary(let dict):
-                    let metadata = Files.FileMetadataSerializer().deserialize(dict["metadata"] ?? .Null)
-                    let link = Serialization._StringSerializer.deserialize(dict["link"] ?? .Null)
+                    let metadata = Files.FileMetadataSerializer().deserialize(dict["metadata"] ?? .null)
+                    let link = Serialization._StringSerializer.deserialize(dict["link"] ?? .null)
                     return GetTemporaryLinkResult(metadata: metadata, link: link)
                 default:
                     fatalError("Type error deserializing")
@@ -1397,8 +1397,8 @@ public class Files {
         public func deserialize(json: JSON) -> GpsCoordinates {
             switch json {
                 case .Dictionary(let dict):
-                    let latitude = Serialization._DoubleSerializer.deserialize(dict["latitude"] ?? .Null)
-                    let longitude = Serialization._DoubleSerializer.deserialize(dict["longitude"] ?? .Null)
+                    let latitude = Serialization._DoubleSerializer.deserialize(dict["latitude"] ?? .null)
+                    let longitude = Serialization._DoubleSerializer.deserialize(dict["longitude"] ?? .null)
                     return GpsCoordinates(latitude: latitude, longitude: longitude)
                 default:
                     fatalError("Type error deserializing")
@@ -1447,11 +1447,11 @@ public class Files {
         public func deserialize(json: JSON) -> ListFolderArg {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let recursive = Serialization._BoolSerializer.deserialize(dict["recursive"] ?? .Null)
-                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .Null)
-                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .Null)
-                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let recursive = Serialization._BoolSerializer.deserialize(dict["recursive"] ?? .number(0))
+                    let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .number(0))
+                    let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .number(0))
+                    let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
                     return ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers)
                 default:
                     fatalError("Type error deserializing")
@@ -1482,7 +1482,7 @@ public class Files {
         public func deserialize(json: JSON) -> ListFolderContinueArg {
             switch json {
                 case .Dictionary(let dict):
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
+                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
                     return ListFolderContinueArg(cursor: cursor)
                 default:
                     fatalError("Type error deserializing")
@@ -1609,7 +1609,7 @@ public class Files {
         public func deserialize(json: JSON) -> ListFolderGetLatestCursorResult {
             switch json {
                 case .Dictionary(let dict):
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
+                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
                     return ListFolderGetLatestCursorResult(cursor: cursor)
                 default:
                     fatalError("Type error deserializing")
@@ -1648,8 +1648,8 @@ public class Files {
         public func deserialize(json: JSON) -> ListFolderLongpollArg {
             switch json {
                 case .Dictionary(let dict):
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
-                    let timeout = Serialization._UInt64Serializer.deserialize(dict["timeout"] ?? .Null)
+                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                    let timeout = Serialization._UInt64Serializer.deserialize(dict["timeout"] ?? .number(30))
                     return ListFolderLongpollArg(cursor: cursor, timeout: timeout)
                 default:
                     fatalError("Type error deserializing")
@@ -1727,8 +1727,8 @@ public class Files {
         public func deserialize(json: JSON) -> ListFolderLongpollResult {
             switch json {
                 case .Dictionary(let dict):
-                    let changes = Serialization._BoolSerializer.deserialize(dict["changes"] ?? .Null)
-                    let backoff = NullableSerializer(Serialization._UInt64Serializer).deserialize(dict["backoff"] ?? .Null)
+                    let changes = Serialization._BoolSerializer.deserialize(dict["changes"] ?? .null)
+                    let backoff = NullableSerializer(Serialization._UInt64Serializer).deserialize(dict["backoff"] ?? .null)
                     return ListFolderLongpollResult(changes: changes, backoff: backoff)
                 default:
                     fatalError("Type error deserializing")
@@ -1767,9 +1767,9 @@ public class Files {
         public func deserialize(json: JSON) -> ListFolderResult {
             switch json {
                 case .Dictionary(let dict):
-                    let entries = ArraySerializer(Files.MetadataSerializer()).deserialize(dict["entries"] ?? .Null)
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
-                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .Null)
+                    let entries = ArraySerializer(Files.MetadataSerializer()).deserialize(dict["entries"] ?? .null)
+                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
                     return ListFolderResult(entries: entries, cursor: cursor, hasMore: hasMore)
                 default:
                     fatalError("Type error deserializing")
@@ -1805,8 +1805,8 @@ public class Files {
         public func deserialize(json: JSON) -> ListRevisionsArg {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let limit = Serialization._UInt64Serializer.deserialize(dict["limit"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let limit = Serialization._UInt64Serializer.deserialize(dict["limit"] ?? .number(10))
                     return ListRevisionsArg(path: path, limit: limit)
                 default:
                     fatalError("Type error deserializing")
@@ -1884,8 +1884,8 @@ public class Files {
         public func deserialize(json: JSON) -> ListRevisionsResult {
             switch json {
                 case .Dictionary(let dict):
-                    let isDeleted = Serialization._BoolSerializer.deserialize(dict["is_deleted"] ?? .Null)
-                    let entries = ArraySerializer(Files.FileMetadataSerializer()).deserialize(dict["entries"] ?? .Null)
+                    let isDeleted = Serialization._BoolSerializer.deserialize(dict["is_deleted"] ?? .null)
+                    let entries = ArraySerializer(Files.FileMetadataSerializer()).deserialize(dict["entries"] ?? .null)
                     return ListRevisionsResult(isDeleted: isDeleted, entries: entries)
                 default:
                     fatalError("Type error deserializing")
@@ -2126,9 +2126,9 @@ public class Files {
         public func deserialize(json: JSON) -> PhotoMetadata {
             switch json {
                 case .Dictionary(let dict):
-                    let dimensions = NullableSerializer(Files.DimensionsSerializer()).deserialize(dict["dimensions"] ?? .Null)
-                    let location = NullableSerializer(Files.GpsCoordinatesSerializer()).deserialize(dict["location"] ?? .Null)
-                    let timeTaken = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["time_taken"] ?? .Null)
+                    let dimensions = NullableSerializer(Files.DimensionsSerializer()).deserialize(dict["dimensions"] ?? .null)
+                    let location = NullableSerializer(Files.GpsCoordinatesSerializer()).deserialize(dict["location"] ?? .null)
+                    let timeTaken = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["time_taken"] ?? .null)
                     return PhotoMetadata(dimensions: dimensions, location: location, timeTaken: timeTaken)
                 default:
                     fatalError("Type error deserializing")
@@ -2164,8 +2164,8 @@ public class Files {
         public func deserialize(json: JSON) -> PreviewArg {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let rev = NullableSerializer(Serialization._StringSerializer).deserialize(dict["rev"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let rev = NullableSerializer(Serialization._StringSerializer).deserialize(dict["rev"] ?? .null)
                     return PreviewArg(path: path, rev: rev)
                 default:
                     fatalError("Type error deserializing")
@@ -2266,9 +2266,9 @@ public class Files {
         public func deserialize(json: JSON) -> PropertyGroupUpdate {
             switch json {
                 case .Dictionary(let dict):
-                    let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .Null)
-                    let addOrUpdateFields = NullableSerializer(ArraySerializer(Properties.PropertyFieldSerializer())).deserialize(dict["add_or_update_fields"] ?? .Null)
-                    let removeFields = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["remove_fields"] ?? .Null)
+                    let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
+                    let addOrUpdateFields = NullableSerializer(ArraySerializer(Properties.PropertyFieldSerializer())).deserialize(dict["add_or_update_fields"] ?? .null)
+                    let removeFields = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["remove_fields"] ?? .null)
                     return PropertyGroupUpdate(templateId: templateId, addOrUpdateFields: addOrUpdateFields, removeFields: removeFields)
                 default:
                     fatalError("Type error deserializing")
@@ -2303,8 +2303,8 @@ public class Files {
         public func deserialize(json: JSON) -> PropertyGroupWithPath {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let propertyGroups = ArraySerializer(Properties.PropertyGroupSerializer()).deserialize(dict["property_groups"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let propertyGroups = ArraySerializer(Properties.PropertyGroupSerializer()).deserialize(dict["property_groups"] ?? .null)
                     return PropertyGroupWithPath(path: path, propertyGroups: propertyGroups)
                 default:
                     fatalError("Type error deserializing")
@@ -2340,8 +2340,8 @@ public class Files {
         public func deserialize(json: JSON) -> RelocationArg {
             switch json {
                 case .Dictionary(let dict):
-                    let fromPath = Serialization._StringSerializer.deserialize(dict["from_path"] ?? .Null)
-                    let toPath = Serialization._StringSerializer.deserialize(dict["to_path"] ?? .Null)
+                    let fromPath = Serialization._StringSerializer.deserialize(dict["from_path"] ?? .null)
+                    let toPath = Serialization._StringSerializer.deserialize(dict["to_path"] ?? .null)
                     return RelocationArg(fromPath: fromPath, toPath: toPath)
                 default:
                     fatalError("Type error deserializing")
@@ -2471,8 +2471,8 @@ public class Files {
         public func deserialize(json: JSON) -> RemovePropertiesArg {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let propertyTemplateIds = ArraySerializer(Serialization._StringSerializer).deserialize(dict["property_template_ids"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let propertyTemplateIds = ArraySerializer(Serialization._StringSerializer).deserialize(dict["property_template_ids"] ?? .null)
                     return RemovePropertiesArg(path: path, propertyTemplateIds: propertyTemplateIds)
                 default:
                     fatalError("Type error deserializing")
@@ -2578,8 +2578,8 @@ public class Files {
         public func deserialize(json: JSON) -> RestoreArg {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let rev = Serialization._StringSerializer.deserialize(dict["rev"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let rev = Serialization._StringSerializer.deserialize(dict["rev"] ?? .null)
                     return RestoreArg(path: path, rev: rev)
                 default:
                     fatalError("Type error deserializing")
@@ -2676,8 +2676,8 @@ public class Files {
         public func deserialize(json: JSON) -> SaveCopyReferenceArg {
             switch json {
                 case .Dictionary(let dict):
-                    let copyReference = Serialization._StringSerializer.deserialize(dict["copy_reference"] ?? .Null)
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
+                    let copyReference = Serialization._StringSerializer.deserialize(dict["copy_reference"] ?? .null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
                     return SaveCopyReferenceArg(copyReference: copyReference, path: path)
                 default:
                     fatalError("Type error deserializing")
@@ -2784,7 +2784,7 @@ public class Files {
         public func deserialize(json: JSON) -> SaveCopyReferenceResult {
             switch json {
                 case .Dictionary(let dict):
-                    let metadata = Files.MetadataSerializer().deserialize(dict["metadata"] ?? .Null)
+                    let metadata = Files.MetadataSerializer().deserialize(dict["metadata"] ?? .null)
                     return SaveCopyReferenceResult(metadata: metadata)
                 default:
                     fatalError("Type error deserializing")
@@ -2820,8 +2820,8 @@ public class Files {
         public func deserialize(json: JSON) -> SaveUrlArg {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let url = Serialization._StringSerializer.deserialize(dict["url"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let url = Serialization._StringSerializer.deserialize(dict["url"] ?? .null)
                     return SaveUrlArg(path: path, url: url)
                 default:
                     fatalError("Type error deserializing")
@@ -3041,11 +3041,11 @@ public class Files {
         public func deserialize(json: JSON) -> SearchArg {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let query = Serialization._StringSerializer.deserialize(dict["query"] ?? .Null)
-                    let start = Serialization._UInt64Serializer.deserialize(dict["start"] ?? .Null)
-                    let maxResults = Serialization._UInt64Serializer.deserialize(dict["max_results"] ?? .Null)
-                    let mode = Files.SearchModeSerializer().deserialize(dict["mode"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let query = Serialization._StringSerializer.deserialize(dict["query"] ?? .null)
+                    let start = Serialization._UInt64Serializer.deserialize(dict["start"] ?? .number(0))
+                    let maxResults = Serialization._UInt64Serializer.deserialize(dict["max_results"] ?? .number(100))
+                    let mode = Files.SearchModeSerializer().deserialize(dict["mode"] ?? Files.SearchModeSerializer().serialize(.filename))
                     return SearchArg(path: path, query: query, start: start, maxResults: maxResults, mode: mode)
                 default:
                     fatalError("Type error deserializing")
@@ -3123,8 +3123,8 @@ public class Files {
         public func deserialize(json: JSON) -> SearchMatch {
             switch json {
                 case .Dictionary(let dict):
-                    let matchType = Files.SearchMatchTypeSerializer().deserialize(dict["match_type"] ?? .Null)
-                    let metadata = Files.MetadataSerializer().deserialize(dict["metadata"] ?? .Null)
+                    let matchType = Files.SearchMatchTypeSerializer().deserialize(dict["match_type"] ?? .null)
+                    let metadata = Files.MetadataSerializer().deserialize(dict["metadata"] ?? .null)
                     return SearchMatch(matchType: matchType, metadata: metadata)
                 default:
                     fatalError("Type error deserializing")
@@ -3266,9 +3266,9 @@ public class Files {
         public func deserialize(json: JSON) -> SearchResult {
             switch json {
                 case .Dictionary(let dict):
-                    let matches = ArraySerializer(Files.SearchMatchSerializer()).deserialize(dict["matches"] ?? .Null)
-                    let more = Serialization._BoolSerializer.deserialize(dict["more"] ?? .Null)
-                    let start = Serialization._UInt64Serializer.deserialize(dict["start"] ?? .Null)
+                    let matches = ArraySerializer(Files.SearchMatchSerializer()).deserialize(dict["matches"] ?? .null)
+                    let more = Serialization._BoolSerializer.deserialize(dict["more"] ?? .null)
+                    let start = Serialization._UInt64Serializer.deserialize(dict["start"] ?? .null)
                     return SearchResult(matches: matches, more: more, start: start)
                 default:
                     fatalError("Type error deserializing")
@@ -3308,9 +3308,9 @@ public class Files {
         public func deserialize(json: JSON) -> ThumbnailArg {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let format = Files.ThumbnailFormatSerializer().deserialize(dict["format"] ?? .Null)
-                    let size = Files.ThumbnailSizeSerializer().deserialize(dict["size"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let format = Files.ThumbnailFormatSerializer().deserialize(dict["format"] ?? Files.ThumbnailFormatSerializer().serialize(.jpeg))
+                    let size = Files.ThumbnailSizeSerializer().deserialize(dict["size"] ?? Files.ThumbnailSizeSerializer().serialize(.w64h64))
                     return ThumbnailArg(path: path, format: format, size: size)
                 default:
                     fatalError("Type error deserializing")
@@ -3601,8 +3601,8 @@ public class Files {
         public func deserialize(json: JSON) -> UpdatePropertyGroupArg {
             switch json {
                 case .Dictionary(let dict):
-                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .Null)
-                    let updatePropertyGroups = ArraySerializer(Files.PropertyGroupUpdateSerializer()).deserialize(dict["update_property_groups"] ?? .Null)
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    let updatePropertyGroups = ArraySerializer(Files.PropertyGroupUpdateSerializer()).deserialize(dict["update_property_groups"] ?? .null)
                     return UpdatePropertyGroupArg(path: path, updatePropertyGroups: updatePropertyGroups)
                 default:
                     fatalError("Type error deserializing")
@@ -3734,8 +3734,8 @@ public class Files {
         public func deserialize(json: JSON) -> UploadSessionAppendArg {
             switch json {
                 case .Dictionary(let dict):
-                    let cursor = Files.UploadSessionCursorSerializer().deserialize(dict["cursor"] ?? .Null)
-                    let close = Serialization._BoolSerializer.deserialize(dict["close"] ?? .Null)
+                    let cursor = Files.UploadSessionCursorSerializer().deserialize(dict["cursor"] ?? .null)
+                    let close = Serialization._BoolSerializer.deserialize(dict["close"] ?? .number(0))
                     return UploadSessionAppendArg(cursor: cursor, close: close)
                 default:
                     fatalError("Type error deserializing")
@@ -3772,8 +3772,8 @@ public class Files {
         public func deserialize(json: JSON) -> UploadSessionCursor {
             switch json {
                 case .Dictionary(let dict):
-                    let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .Null)
-                    let offset = Serialization._UInt64Serializer.deserialize(dict["offset"] ?? .Null)
+                    let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
+                    let offset = Serialization._UInt64Serializer.deserialize(dict["offset"] ?? .null)
                     return UploadSessionCursor(sessionId: sessionId, offset: offset)
                 default:
                     fatalError("Type error deserializing")
@@ -3807,8 +3807,8 @@ public class Files {
         public func deserialize(json: JSON) -> UploadSessionFinishArg {
             switch json {
                 case .Dictionary(let dict):
-                    let cursor = Files.UploadSessionCursorSerializer().deserialize(dict["cursor"] ?? .Null)
-                    let commit = Files.CommitInfoSerializer().deserialize(dict["commit"] ?? .Null)
+                    let cursor = Files.UploadSessionCursorSerializer().deserialize(dict["cursor"] ?? .null)
+                    let commit = Files.CommitInfoSerializer().deserialize(dict["commit"] ?? .null)
                     return UploadSessionFinishArg(cursor: cursor, commit: commit)
                 default:
                     fatalError("Type error deserializing")
@@ -3838,7 +3838,7 @@ public class Files {
         public func deserialize(json: JSON) -> UploadSessionFinishBatchArg {
             switch json {
                 case .Dictionary(let dict):
-                    let entries = ArraySerializer(Files.UploadSessionFinishArgSerializer()).deserialize(dict["entries"] ?? .Null)
+                    let entries = ArraySerializer(Files.UploadSessionFinishArgSerializer()).deserialize(dict["entries"] ?? .null)
                     return UploadSessionFinishBatchArg(entries: entries)
                 default:
                     fatalError("Type error deserializing")
@@ -3912,7 +3912,7 @@ public class Files {
         public func deserialize(json: JSON) -> UploadSessionFinishBatchResult {
             switch json {
                 case .Dictionary(let dict):
-                    let entries = ArraySerializer(Files.UploadSessionFinishBatchResultEntrySerializer()).deserialize(dict["entries"] ?? .Null)
+                    let entries = ArraySerializer(Files.UploadSessionFinishBatchResultEntrySerializer()).deserialize(dict["entries"] ?? .null)
                     return UploadSessionFinishBatchResult(entries: entries)
                 default:
                     fatalError("Type error deserializing")
@@ -4120,7 +4120,7 @@ public class Files {
         public func deserialize(json: JSON) -> UploadSessionOffsetError {
             switch json {
                 case .Dictionary(let dict):
-                    let correctOffset = Serialization._UInt64Serializer.deserialize(dict["correct_offset"] ?? .Null)
+                    let correctOffset = Serialization._UInt64Serializer.deserialize(dict["correct_offset"] ?? .null)
                     return UploadSessionOffsetError(correctOffset: correctOffset)
                 default:
                     fatalError("Type error deserializing")
@@ -4151,7 +4151,7 @@ public class Files {
         public func deserialize(json: JSON) -> UploadSessionStartArg {
             switch json {
                 case .Dictionary(let dict):
-                    let close = Serialization._BoolSerializer.deserialize(dict["close"] ?? .Null)
+                    let close = Serialization._BoolSerializer.deserialize(dict["close"] ?? .number(0))
                     return UploadSessionStartArg(close: close)
                 default:
                     fatalError("Type error deserializing")
@@ -4182,7 +4182,7 @@ public class Files {
         public func deserialize(json: JSON) -> UploadSessionStartResult {
             switch json {
                 case .Dictionary(let dict):
-                    let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .Null)
+                    let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
                     return UploadSessionStartResult(sessionId: sessionId)
                 default:
                     fatalError("Type error deserializing")
@@ -4217,8 +4217,8 @@ public class Files {
         public func deserialize(json: JSON) -> UploadWriteFailed {
             switch json {
                 case .Dictionary(let dict):
-                    let reason = Files.WriteErrorSerializer().deserialize(dict["reason"] ?? .Null)
-                    let uploadSessionId = Serialization._StringSerializer.deserialize(dict["upload_session_id"] ?? .Null)
+                    let reason = Files.WriteErrorSerializer().deserialize(dict["reason"] ?? .null)
+                    let uploadSessionId = Serialization._StringSerializer.deserialize(dict["upload_session_id"] ?? .null)
                     return UploadWriteFailed(reason: reason, uploadSessionId: uploadSessionId)
                 default:
                     fatalError("Type error deserializing")
@@ -4253,10 +4253,10 @@ public class Files {
         public func deserialize(json: JSON) -> VideoMetadata {
             switch json {
                 case .Dictionary(let dict):
-                    let dimensions = NullableSerializer(Files.DimensionsSerializer()).deserialize(dict["dimensions"] ?? .Null)
-                    let location = NullableSerializer(Files.GpsCoordinatesSerializer()).deserialize(dict["location"] ?? .Null)
-                    let timeTaken = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["time_taken"] ?? .Null)
-                    let duration = NullableSerializer(Serialization._UInt64Serializer).deserialize(dict["duration"] ?? .Null)
+                    let dimensions = NullableSerializer(Files.DimensionsSerializer()).deserialize(dict["dimensions"] ?? .null)
+                    let location = NullableSerializer(Files.GpsCoordinatesSerializer()).deserialize(dict["location"] ?? .null)
+                    let timeTaken = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["time_taken"] ?? .null)
+                    let duration = NullableSerializer(Serialization._UInt64Serializer).deserialize(dict["duration"] ?? .null)
                     return VideoMetadata(dimensions: dimensions, location: location, timeTaken: timeTaken, duration: duration)
                 default:
                     fatalError("Type error deserializing")

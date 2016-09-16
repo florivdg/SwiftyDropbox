@@ -47,11 +47,11 @@ public class Team {
         public func deserialize(json: JSON) -> DeviceSession {
             switch json {
                 case .Dictionary(let dict):
-                    let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .Null)
-                    let ipAddress = NullableSerializer(Serialization._StringSerializer).deserialize(dict["ip_address"] ?? .Null)
-                    let country = NullableSerializer(Serialization._StringSerializer).deserialize(dict["country"] ?? .Null)
-                    let created = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["created"] ?? .Null)
-                    let updated = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["updated"] ?? .Null)
+                    let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
+                    let ipAddress = NullableSerializer(Serialization._StringSerializer).deserialize(dict["ip_address"] ?? .null)
+                    let country = NullableSerializer(Serialization._StringSerializer).deserialize(dict["country"] ?? .null)
+                    let created = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["created"] ?? .null)
+                    let updated = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["updated"] ?? .null)
                     return DeviceSession(sessionId: sessionId, ipAddress: ipAddress, country: country, created: created, updated: updated)
                 default:
                     fatalError("Type error deserializing")
@@ -98,14 +98,14 @@ public class Team {
         public func deserialize(json: JSON) -> ActiveWebSession {
             switch json {
                 case .Dictionary(let dict):
-                    let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .Null)
-                    let userAgent = Serialization._StringSerializer.deserialize(dict["user_agent"] ?? .Null)
-                    let os = Serialization._StringSerializer.deserialize(dict["os"] ?? .Null)
-                    let browser = Serialization._StringSerializer.deserialize(dict["browser"] ?? .Null)
-                    let ipAddress = NullableSerializer(Serialization._StringSerializer).deserialize(dict["ip_address"] ?? .Null)
-                    let country = NullableSerializer(Serialization._StringSerializer).deserialize(dict["country"] ?? .Null)
-                    let created = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["created"] ?? .Null)
-                    let updated = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["updated"] ?? .Null)
+                    let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
+                    let userAgent = Serialization._StringSerializer.deserialize(dict["user_agent"] ?? .null)
+                    let os = Serialization._StringSerializer.deserialize(dict["os"] ?? .null)
+                    let browser = Serialization._StringSerializer.deserialize(dict["browser"] ?? .null)
+                    let ipAddress = NullableSerializer(Serialization._StringSerializer).deserialize(dict["ip_address"] ?? .null)
+                    let country = NullableSerializer(Serialization._StringSerializer).deserialize(dict["country"] ?? .null)
+                    let created = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["created"] ?? .null)
+                    let updated = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["updated"] ?? .null)
                     return ActiveWebSession(sessionId: sessionId, userAgent: userAgent, os: os, browser: browser, ipAddress: ipAddress, country: country, created: created, updated: updated)
                 default:
                     fatalError("Type error deserializing")
@@ -132,9 +132,9 @@ public class Team {
         public func deserialize(json: JSON) -> AddPropertyTemplateArg {
             switch json {
                 case .Dictionary(let dict):
-                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
-                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .Null)
-                    let fields = ArraySerializer(Properties.PropertyFieldTemplateSerializer()).deserialize(dict["fields"] ?? .Null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    let fields = ArraySerializer(Properties.PropertyFieldTemplateSerializer()).deserialize(dict["fields"] ?? .null)
                     return AddPropertyTemplateArg(name: name, description_: description_, fields: fields)
                 default:
                     fatalError("Type error deserializing")
@@ -165,7 +165,7 @@ public class Team {
         public func deserialize(json: JSON) -> AddPropertyTemplateResult {
             switch json {
                 case .Dictionary(let dict):
-                    let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .Null)
+                    let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
                     return AddPropertyTemplateResult(templateId: templateId)
                 default:
                     fatalError("Type error deserializing")
@@ -278,12 +278,12 @@ public class Team {
         public func deserialize(json: JSON) -> ApiApp {
             switch json {
                 case .Dictionary(let dict):
-                    let appId = Serialization._StringSerializer.deserialize(dict["app_id"] ?? .Null)
-                    let appName = Serialization._StringSerializer.deserialize(dict["app_name"] ?? .Null)
-                    let isAppFolder = Serialization._BoolSerializer.deserialize(dict["is_app_folder"] ?? .Null)
-                    let publisher = NullableSerializer(Serialization._StringSerializer).deserialize(dict["publisher"] ?? .Null)
-                    let publisherUrl = NullableSerializer(Serialization._StringSerializer).deserialize(dict["publisher_url"] ?? .Null)
-                    let linked = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["linked"] ?? .Null)
+                    let appId = Serialization._StringSerializer.deserialize(dict["app_id"] ?? .null)
+                    let appName = Serialization._StringSerializer.deserialize(dict["app_name"] ?? .null)
+                    let isAppFolder = Serialization._BoolSerializer.deserialize(dict["is_app_folder"] ?? .null)
+                    let publisher = NullableSerializer(Serialization._StringSerializer).deserialize(dict["publisher"] ?? .null)
+                    let publisherUrl = NullableSerializer(Serialization._StringSerializer).deserialize(dict["publisher_url"] ?? .null)
+                    let linked = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["linked"] ?? .null)
                     return ApiApp(appId: appId, appName: appName, isAppFolder: isAppFolder, publisher: publisher, publisherUrl: publisherUrl, linked: linked)
                 default:
                     fatalError("Type error deserializing")
@@ -314,7 +314,7 @@ public class Team {
         public func deserialize(json: JSON) -> BaseDfbReport {
             switch json {
                 case .Dictionary(let dict):
-                    let startDate = Serialization._StringSerializer.deserialize(dict["start_date"] ?? .Null)
+                    let startDate = Serialization._StringSerializer.deserialize(dict["start_date"] ?? .null)
                     return BaseDfbReport(startDate: startDate)
                 default:
                     fatalError("Type error deserializing")
@@ -348,8 +348,8 @@ public class Team {
         public func deserialize(json: JSON) -> DateRange {
             switch json {
                 case .Dictionary(let dict):
-                    let startDate = NullableSerializer(NSDateSerializer("%Y-%m-%d")).deserialize(dict["start_date"] ?? .Null)
-                    let endDate = NullableSerializer(NSDateSerializer("%Y-%m-%d")).deserialize(dict["end_date"] ?? .Null)
+                    let startDate = NullableSerializer(NSDateSerializer("%Y-%m-%d")).deserialize(dict["start_date"] ?? .null)
+                    let endDate = NullableSerializer(NSDateSerializer("%Y-%m-%d")).deserialize(dict["end_date"] ?? .null)
                     return DateRange(startDate: startDate, endDate: endDate)
                 default:
                     fatalError("Type error deserializing")
@@ -439,16 +439,16 @@ public class Team {
         public func deserialize(json: JSON) -> DesktopClientSession {
             switch json {
                 case .Dictionary(let dict):
-                    let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .Null)
-                    let hostName = Serialization._StringSerializer.deserialize(dict["host_name"] ?? .Null)
-                    let clientType = Team.DesktopPlatformSerializer().deserialize(dict["client_type"] ?? .Null)
-                    let clientVersion = Serialization._StringSerializer.deserialize(dict["client_version"] ?? .Null)
-                    let platform = Serialization._StringSerializer.deserialize(dict["platform"] ?? .Null)
-                    let isDeleteOnUnlinkSupported = Serialization._BoolSerializer.deserialize(dict["is_delete_on_unlink_supported"] ?? .Null)
-                    let ipAddress = NullableSerializer(Serialization._StringSerializer).deserialize(dict["ip_address"] ?? .Null)
-                    let country = NullableSerializer(Serialization._StringSerializer).deserialize(dict["country"] ?? .Null)
-                    let created = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["created"] ?? .Null)
-                    let updated = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["updated"] ?? .Null)
+                    let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
+                    let hostName = Serialization._StringSerializer.deserialize(dict["host_name"] ?? .null)
+                    let clientType = Team.DesktopPlatformSerializer().deserialize(dict["client_type"] ?? .null)
+                    let clientVersion = Serialization._StringSerializer.deserialize(dict["client_version"] ?? .null)
+                    let platform = Serialization._StringSerializer.deserialize(dict["platform"] ?? .null)
+                    let isDeleteOnUnlinkSupported = Serialization._BoolSerializer.deserialize(dict["is_delete_on_unlink_supported"] ?? .null)
+                    let ipAddress = NullableSerializer(Serialization._StringSerializer).deserialize(dict["ip_address"] ?? .null)
+                    let country = NullableSerializer(Serialization._StringSerializer).deserialize(dict["country"] ?? .null)
+                    let created = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["created"] ?? .null)
+                    let updated = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["updated"] ?? .null)
                     return DesktopClientSession(sessionId: sessionId, hostName: hostName, clientType: clientType, clientVersion: clientVersion, platform: platform, isDeleteOnUnlinkSupported: isDeleteOnUnlinkSupported, ipAddress: ipAddress, country: country, created: created, updated: updated)
                 default:
                     fatalError("Type error deserializing")
@@ -543,8 +543,8 @@ public class Team {
         public func deserialize(json: JSON) -> DeviceSessionArg {
             switch json {
                 case .Dictionary(let dict):
-                    let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .Null)
-                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .Null)
+                    let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
+                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
                     return DeviceSessionArg(sessionId: sessionId, teamMemberId: teamMemberId)
                 default:
                     fatalError("Type error deserializing")
@@ -606,13 +606,13 @@ public class Team {
         public func deserialize(json: JSON) -> DevicesActive {
             switch json {
                 case .Dictionary(let dict):
-                    let windows = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["windows"] ?? .Null)
-                    let macos = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["macos"] ?? .Null)
-                    let linux = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["linux"] ?? .Null)
-                    let ios = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["ios"] ?? .Null)
-                    let android = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["android"] ?? .Null)
-                    let other = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["other"] ?? .Null)
-                    let total = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["total"] ?? .Null)
+                    let windows = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["windows"] ?? .null)
+                    let macos = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["macos"] ?? .null)
+                    let linux = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["linux"] ?? .null)
+                    let ios = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["ios"] ?? .null)
+                    let android = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["android"] ?? .null)
+                    let other = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["other"] ?? .null)
+                    let total = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["total"] ?? .null)
                     return DevicesActive(windows: windows, macos: macos, linux: linux, ios: ios, android: android, other: other, total: total)
                 default:
                     fatalError("Type error deserializing")
@@ -712,21 +712,21 @@ public class Team {
         public func deserialize(json: JSON) -> GetActivityReport {
             switch json {
                 case .Dictionary(let dict):
-                    let startDate = Serialization._StringSerializer.deserialize(dict["start_date"] ?? .Null)
-                    let adds = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["adds"] ?? .Null)
-                    let edits = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["edits"] ?? .Null)
-                    let deletes = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["deletes"] ?? .Null)
-                    let activeUsers28Day = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["active_users_28_day"] ?? .Null)
-                    let activeUsers7Day = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["active_users_7_day"] ?? .Null)
-                    let activeUsers1Day = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["active_users_1_day"] ?? .Null)
-                    let activeSharedFolders28Day = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["active_shared_folders_28_day"] ?? .Null)
-                    let activeSharedFolders7Day = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["active_shared_folders_7_day"] ?? .Null)
-                    let activeSharedFolders1Day = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["active_shared_folders_1_day"] ?? .Null)
-                    let sharedLinksCreated = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["shared_links_created"] ?? .Null)
-                    let sharedLinksViewedByTeam = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["shared_links_viewed_by_team"] ?? .Null)
-                    let sharedLinksViewedByOutsideUser = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["shared_links_viewed_by_outside_user"] ?? .Null)
-                    let sharedLinksViewedByNotLoggedIn = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["shared_links_viewed_by_not_logged_in"] ?? .Null)
-                    let sharedLinksViewedTotal = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["shared_links_viewed_total"] ?? .Null)
+                    let startDate = Serialization._StringSerializer.deserialize(dict["start_date"] ?? .null)
+                    let adds = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["adds"] ?? .null)
+                    let edits = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["edits"] ?? .null)
+                    let deletes = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["deletes"] ?? .null)
+                    let activeUsers28Day = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["active_users_28_day"] ?? .null)
+                    let activeUsers7Day = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["active_users_7_day"] ?? .null)
+                    let activeUsers1Day = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["active_users_1_day"] ?? .null)
+                    let activeSharedFolders28Day = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["active_shared_folders_28_day"] ?? .null)
+                    let activeSharedFolders7Day = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["active_shared_folders_7_day"] ?? .null)
+                    let activeSharedFolders1Day = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["active_shared_folders_1_day"] ?? .null)
+                    let sharedLinksCreated = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["shared_links_created"] ?? .null)
+                    let sharedLinksViewedByTeam = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["shared_links_viewed_by_team"] ?? .null)
+                    let sharedLinksViewedByOutsideUser = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["shared_links_viewed_by_outside_user"] ?? .null)
+                    let sharedLinksViewedByNotLoggedIn = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["shared_links_viewed_by_not_logged_in"] ?? .null)
+                    let sharedLinksViewedTotal = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["shared_links_viewed_total"] ?? .null)
                     return GetActivityReport(startDate: startDate, adds: adds, edits: edits, deletes: deletes, activeUsers28Day: activeUsers28Day, activeUsers7Day: activeUsers7Day, activeUsers1Day: activeUsers1Day, activeSharedFolders28Day: activeSharedFolders28Day, activeSharedFolders7Day: activeSharedFolders7Day, activeSharedFolders1Day: activeSharedFolders1Day, sharedLinksCreated: sharedLinksCreated, sharedLinksViewedByTeam: sharedLinksViewedByTeam, sharedLinksViewedByOutsideUser: sharedLinksViewedByOutsideUser, sharedLinksViewedByNotLoggedIn: sharedLinksViewedByNotLoggedIn, sharedLinksViewedTotal: sharedLinksViewedTotal)
                 default:
                     fatalError("Type error deserializing")
@@ -768,10 +768,10 @@ public class Team {
         public func deserialize(json: JSON) -> GetDevicesReport {
             switch json {
                 case .Dictionary(let dict):
-                    let startDate = Serialization._StringSerializer.deserialize(dict["start_date"] ?? .Null)
-                    let active1Day = Team.DevicesActiveSerializer().deserialize(dict["active_1_day"] ?? .Null)
-                    let active7Day = Team.DevicesActiveSerializer().deserialize(dict["active_7_day"] ?? .Null)
-                    let active28Day = Team.DevicesActiveSerializer().deserialize(dict["active_28_day"] ?? .Null)
+                    let startDate = Serialization._StringSerializer.deserialize(dict["start_date"] ?? .null)
+                    let active1Day = Team.DevicesActiveSerializer().deserialize(dict["active_1_day"] ?? .null)
+                    let active7Day = Team.DevicesActiveSerializer().deserialize(dict["active_7_day"] ?? .null)
+                    let active28Day = Team.DevicesActiveSerializer().deserialize(dict["active_28_day"] ?? .null)
                     return GetDevicesReport(startDate: startDate, active1Day: active1Day, active7Day: active7Day, active28Day: active28Day)
                 default:
                     fatalError("Type error deserializing")
@@ -825,12 +825,12 @@ public class Team {
         public func deserialize(json: JSON) -> GetMembershipReport {
             switch json {
                 case .Dictionary(let dict):
-                    let startDate = Serialization._StringSerializer.deserialize(dict["start_date"] ?? .Null)
-                    let teamSize = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["team_size"] ?? .Null)
-                    let pendingInvites = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["pending_invites"] ?? .Null)
-                    let membersJoined = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["members_joined"] ?? .Null)
-                    let suspendedMembers = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["suspended_members"] ?? .Null)
-                    let licenses = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["licenses"] ?? .Null)
+                    let startDate = Serialization._StringSerializer.deserialize(dict["start_date"] ?? .null)
+                    let teamSize = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["team_size"] ?? .null)
+                    let pendingInvites = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["pending_invites"] ?? .null)
+                    let membersJoined = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["members_joined"] ?? .null)
+                    let suspendedMembers = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["suspended_members"] ?? .null)
+                    let licenses = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["licenses"] ?? .null)
                     return GetMembershipReport(startDate: startDate, teamSize: teamSize, pendingInvites: pendingInvites, membersJoined: membersJoined, suspendedMembers: suspendedMembers, licenses: licenses)
                 default:
                     fatalError("Type error deserializing")
@@ -886,12 +886,12 @@ public class Team {
         public func deserialize(json: JSON) -> GetStorageReport {
             switch json {
                 case .Dictionary(let dict):
-                    let startDate = Serialization._StringSerializer.deserialize(dict["start_date"] ?? .Null)
-                    let totalUsage = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["total_usage"] ?? .Null)
-                    let sharedUsage = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["shared_usage"] ?? .Null)
-                    let unsharedUsage = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["unshared_usage"] ?? .Null)
-                    let sharedFolders = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["shared_folders"] ?? .Null)
-                    let memberStorageMap = ArraySerializer(ArraySerializer(Team.StorageBucketSerializer())).deserialize(dict["member_storage_map"] ?? .Null)
+                    let startDate = Serialization._StringSerializer.deserialize(dict["start_date"] ?? .null)
+                    let totalUsage = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["total_usage"] ?? .null)
+                    let sharedUsage = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["shared_usage"] ?? .null)
+                    let unsharedUsage = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["unshared_usage"] ?? .null)
+                    let sharedFolders = ArraySerializer(NullableSerializer(Serialization._UInt64Serializer)).deserialize(dict["shared_folders"] ?? .null)
+                    let memberStorageMap = ArraySerializer(ArraySerializer(Team.StorageBucketSerializer())).deserialize(dict["member_storage_map"] ?? .null)
                     return GetStorageReport(startDate: startDate, totalUsage: totalUsage, sharedUsage: sharedUsage, unsharedUsage: unsharedUsage, sharedFolders: sharedFolders, memberStorageMap: memberStorageMap)
                 default:
                     fatalError("Type error deserializing")
@@ -974,9 +974,9 @@ public class Team {
         public func deserialize(json: JSON) -> GroupCreateArg {
             switch json {
                 case .Dictionary(let dict):
-                    let groupName = Serialization._StringSerializer.deserialize(dict["group_name"] ?? .Null)
-                    let groupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["group_external_id"] ?? .Null)
-                    let groupManagementType = NullableSerializer(TeamCommon.GroupManagementTypeSerializer()).deserialize(dict["group_management_type"] ?? .Null)
+                    let groupName = Serialization._StringSerializer.deserialize(dict["group_name"] ?? .null)
+                    let groupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["group_external_id"] ?? .null)
+                    let groupManagementType = NullableSerializer(TeamCommon.GroupManagementTypeSerializer()).deserialize(dict["group_management_type"] ?? .null)
                     return GroupCreateArg(groupName: groupName, groupExternalId: groupExternalId, groupManagementType: groupManagementType)
                 default:
                     fatalError("Type error deserializing")
@@ -1170,13 +1170,13 @@ public class Team {
         public func deserialize(json: JSON) -> GroupFullInfo {
             switch json {
                 case .Dictionary(let dict):
-                    let groupName = Serialization._StringSerializer.deserialize(dict["group_name"] ?? .Null)
-                    let groupId = Serialization._StringSerializer.deserialize(dict["group_id"] ?? .Null)
-                    let groupManagementType = TeamCommon.GroupManagementTypeSerializer().deserialize(dict["group_management_type"] ?? .Null)
-                    let created = Serialization._UInt64Serializer.deserialize(dict["created"] ?? .Null)
-                    let groupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["group_external_id"] ?? .Null)
-                    let memberCount = NullableSerializer(Serialization._UInt32Serializer).deserialize(dict["member_count"] ?? .Null)
-                    let members = NullableSerializer(ArraySerializer(Team.GroupMemberInfoSerializer())).deserialize(dict["members"] ?? .Null)
+                    let groupName = Serialization._StringSerializer.deserialize(dict["group_name"] ?? .null)
+                    let groupId = Serialization._StringSerializer.deserialize(dict["group_id"] ?? .null)
+                    let groupManagementType = TeamCommon.GroupManagementTypeSerializer().deserialize(dict["group_management_type"] ?? .null)
+                    let created = Serialization._UInt64Serializer.deserialize(dict["created"] ?? .null)
+                    let groupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["group_external_id"] ?? .null)
+                    let memberCount = NullableSerializer(Serialization._UInt32Serializer).deserialize(dict["member_count"] ?? .null)
+                    let members = NullableSerializer(ArraySerializer(Team.GroupMemberInfoSerializer())).deserialize(dict["members"] ?? .null)
                     return GroupFullInfo(groupName: groupName, groupId: groupId, groupManagementType: groupManagementType, created: created, groupExternalId: groupExternalId, memberCount: memberCount, members: members)
                 default:
                     fatalError("Type error deserializing")
@@ -1210,8 +1210,8 @@ public class Team {
         public func deserialize(json: JSON) -> GroupMemberInfo {
             switch json {
                 case .Dictionary(let dict):
-                    let profile = Team.MemberProfileSerializer().deserialize(dict["profile"] ?? .Null)
-                    let accessType = Team.GroupAccessTypeSerializer().deserialize(dict["access_type"] ?? .Null)
+                    let profile = Team.MemberProfileSerializer().deserialize(dict["profile"] ?? .null)
+                    let accessType = Team.GroupAccessTypeSerializer().deserialize(dict["access_type"] ?? .null)
                     return GroupMemberInfo(profile: profile, accessType: accessType)
                 default:
                     fatalError("Type error deserializing")
@@ -1245,8 +1245,8 @@ public class Team {
         public func deserialize(json: JSON) -> GroupMemberSelector {
             switch json {
                 case .Dictionary(let dict):
-                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .Null)
-                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .Null)
+                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
                     return GroupMemberSelector(group: group, user: user)
                 default:
                     fatalError("Type error deserializing")
@@ -1388,7 +1388,7 @@ public class Team {
         public func deserialize(json: JSON) -> IncludeMembersArg {
             switch json {
                 case .Dictionary(let dict):
-                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .Null)
+                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .number(1))
                     return IncludeMembersArg(returnMembers: returnMembers)
                 default:
                     fatalError("Type error deserializing")
@@ -1424,9 +1424,9 @@ public class Team {
         public func deserialize(json: JSON) -> GroupMembersAddArg {
             switch json {
                 case .Dictionary(let dict):
-                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .Null)
-                    let members = ArraySerializer(Team.MemberAccessSerializer()).deserialize(dict["members"] ?? .Null)
-                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .Null)
+                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
+                    let members = ArraySerializer(Team.MemberAccessSerializer()).deserialize(dict["members"] ?? .null)
+                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .number(1))
                     return GroupMembersAddArg(group: group, members: members, returnMembers: returnMembers)
                 default:
                     fatalError("Type error deserializing")
@@ -1558,8 +1558,8 @@ public class Team {
         public func deserialize(json: JSON) -> GroupMembersChangeResult {
             switch json {
                 case .Dictionary(let dict):
-                    let groupInfo = Team.GroupFullInfoSerializer().deserialize(dict["group_info"] ?? .Null)
-                    let asyncJobId = Serialization._StringSerializer.deserialize(dict["async_job_id"] ?? .Null)
+                    let groupInfo = Team.GroupFullInfoSerializer().deserialize(dict["group_info"] ?? .null)
+                    let asyncJobId = Serialization._StringSerializer.deserialize(dict["async_job_id"] ?? .null)
                     return GroupMembersChangeResult(groupInfo: groupInfo, asyncJobId: asyncJobId)
                 default:
                     fatalError("Type error deserializing")
@@ -1595,9 +1595,9 @@ public class Team {
         public func deserialize(json: JSON) -> GroupMembersRemoveArg {
             switch json {
                 case .Dictionary(let dict):
-                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .Null)
-                    let users = ArraySerializer(Team.UserSelectorArgSerializer()).deserialize(dict["users"] ?? .Null)
-                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .Null)
+                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
+                    let users = ArraySerializer(Team.UserSelectorArgSerializer()).deserialize(dict["users"] ?? .null)
+                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .number(1))
                     return GroupMembersRemoveArg(group: group, users: users, returnMembers: returnMembers)
                 default:
                     fatalError("Type error deserializing")
@@ -1742,8 +1742,8 @@ public class Team {
         public func deserialize(json: JSON) -> GroupMembersSelector {
             switch json {
                 case .Dictionary(let dict):
-                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .Null)
-                    let users = Team.UsersSelectorArgSerializer().deserialize(dict["users"] ?? .Null)
+                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
+                    let users = Team.UsersSelectorArgSerializer().deserialize(dict["users"] ?? .null)
                     return GroupMembersSelector(group: group, users: users)
                 default:
                     fatalError("Type error deserializing")
@@ -1781,10 +1781,10 @@ public class Team {
         public func deserialize(json: JSON) -> GroupMembersSetAccessTypeArg {
             switch json {
                 case .Dictionary(let dict):
-                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .Null)
-                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .Null)
-                    let accessType = Team.GroupAccessTypeSerializer().deserialize(dict["access_type"] ?? .Null)
-                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .Null)
+                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
+                    let accessType = Team.GroupAccessTypeSerializer().deserialize(dict["access_type"] ?? .null)
+                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .number(1))
                     return GroupMembersSetAccessTypeArg(group: group, user: user, accessType: accessType, returnMembers: returnMembers)
                 default:
                     fatalError("Type error deserializing")
@@ -1876,11 +1876,11 @@ public class Team {
         public func deserialize(json: JSON) -> GroupUpdateArgs {
             switch json {
                 case .Dictionary(let dict):
-                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .Null)
-                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .Null)
-                    let newGroupName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_group_name"] ?? .Null)
-                    let newGroupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_group_external_id"] ?? .Null)
-                    let newGroupManagementType = NullableSerializer(TeamCommon.GroupManagementTypeSerializer()).deserialize(dict["new_group_management_type"] ?? .Null)
+                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
+                    let returnMembers = Serialization._BoolSerializer.deserialize(dict["return_members"] ?? .number(1))
+                    let newGroupName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_group_name"] ?? .null)
+                    let newGroupExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_group_external_id"] ?? .null)
+                    let newGroupManagementType = NullableSerializer(TeamCommon.GroupManagementTypeSerializer()).deserialize(dict["new_group_management_type"] ?? .null)
                     return GroupUpdateArgs(group: group, returnMembers: returnMembers, newGroupName: newGroupName, newGroupExternalId: newGroupExternalId, newGroupManagementType: newGroupManagementType)
                 default:
                     fatalError("Type error deserializing")
@@ -2051,7 +2051,7 @@ public class Team {
         public func deserialize(json: JSON) -> GroupsListArg {
             switch json {
                 case .Dictionary(let dict):
-                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .Null)
+                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .number(1000))
                     return GroupsListArg(limit: limit)
                 default:
                     fatalError("Type error deserializing")
@@ -2082,7 +2082,7 @@ public class Team {
         public func deserialize(json: JSON) -> GroupsListContinueArg {
             switch json {
                 case .Dictionary(let dict):
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
+                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
                     return GroupsListContinueArg(cursor: cursor)
                 default:
                     fatalError("Type error deserializing")
@@ -2165,9 +2165,9 @@ public class Team {
         public func deserialize(json: JSON) -> GroupsListResult {
             switch json {
                 case .Dictionary(let dict):
-                    let groups = ArraySerializer(TeamCommon.GroupSummarySerializer()).deserialize(dict["groups"] ?? .Null)
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
-                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .Null)
+                    let groups = ArraySerializer(TeamCommon.GroupSummarySerializer()).deserialize(dict["groups"] ?? .null)
+                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
                     return GroupsListResult(groups: groups, cursor: cursor, hasMore: hasMore)
                 default:
                     fatalError("Type error deserializing")
@@ -2202,8 +2202,8 @@ public class Team {
         public func deserialize(json: JSON) -> GroupsMembersListArg {
             switch json {
                 case .Dictionary(let dict):
-                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .Null)
-                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .Null)
+                    let group = Team.GroupSelectorSerializer().deserialize(dict["group"] ?? .null)
+                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .number(1000))
                     return GroupsMembersListArg(group: group, limit: limit)
                 default:
                     fatalError("Type error deserializing")
@@ -2234,7 +2234,7 @@ public class Team {
         public func deserialize(json: JSON) -> GroupsMembersListContinueArg {
             switch json {
                 case .Dictionary(let dict):
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
+                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
                     return GroupsMembersListContinueArg(cursor: cursor)
                 default:
                     fatalError("Type error deserializing")
@@ -2317,9 +2317,9 @@ public class Team {
         public func deserialize(json: JSON) -> GroupsMembersListResult {
             switch json {
                 case .Dictionary(let dict):
-                    let members = ArraySerializer(Team.GroupMemberInfoSerializer()).deserialize(dict["members"] ?? .Null)
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
-                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .Null)
+                    let members = ArraySerializer(Team.GroupMemberInfoSerializer()).deserialize(dict["members"] ?? .null)
+                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
                     return GroupsMembersListResult(members: members, cursor: cursor, hasMore: hasMore)
                 default:
                     fatalError("Type error deserializing")
@@ -2455,7 +2455,7 @@ public class Team {
         public func deserialize(json: JSON) -> ListMemberAppsArg {
             switch json {
                 case .Dictionary(let dict):
-                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .Null)
+                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
                     return ListMemberAppsArg(teamMemberId: teamMemberId)
                 default:
                     fatalError("Type error deserializing")
@@ -2528,7 +2528,7 @@ public class Team {
         public func deserialize(json: JSON) -> ListMemberAppsResult {
             switch json {
                 case .Dictionary(let dict):
-                    let linkedApiApps = ArraySerializer(Team.ApiAppSerializer()).deserialize(dict["linked_api_apps"] ?? .Null)
+                    let linkedApiApps = ArraySerializer(Team.ApiAppSerializer()).deserialize(dict["linked_api_apps"] ?? .null)
                     return ListMemberAppsResult(linkedApiApps: linkedApiApps)
                 default:
                     fatalError("Type error deserializing")
@@ -2571,10 +2571,10 @@ public class Team {
         public func deserialize(json: JSON) -> ListMemberDevicesArg {
             switch json {
                 case .Dictionary(let dict):
-                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .Null)
-                    let includeWebSessions = Serialization._BoolSerializer.deserialize(dict["include_web_sessions"] ?? .Null)
-                    let includeDesktopClients = Serialization._BoolSerializer.deserialize(dict["include_desktop_clients"] ?? .Null)
-                    let includeMobileClients = Serialization._BoolSerializer.deserialize(dict["include_mobile_clients"] ?? .Null)
+                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
+                    let includeWebSessions = Serialization._BoolSerializer.deserialize(dict["include_web_sessions"] ?? .number(1))
+                    let includeDesktopClients = Serialization._BoolSerializer.deserialize(dict["include_desktop_clients"] ?? .number(1))
+                    let includeMobileClients = Serialization._BoolSerializer.deserialize(dict["include_mobile_clients"] ?? .number(1))
                     return ListMemberDevicesArg(teamMemberId: teamMemberId, includeWebSessions: includeWebSessions, includeDesktopClients: includeDesktopClients, includeMobileClients: includeMobileClients)
                 default:
                     fatalError("Type error deserializing")
@@ -2655,9 +2655,9 @@ public class Team {
         public func deserialize(json: JSON) -> ListMemberDevicesResult {
             switch json {
                 case .Dictionary(let dict):
-                    let activeWebSessions = NullableSerializer(ArraySerializer(Team.ActiveWebSessionSerializer())).deserialize(dict["active_web_sessions"] ?? .Null)
-                    let desktopClientSessions = NullableSerializer(ArraySerializer(Team.DesktopClientSessionSerializer())).deserialize(dict["desktop_client_sessions"] ?? .Null)
-                    let mobileClientSessions = NullableSerializer(ArraySerializer(Team.MobileClientSessionSerializer())).deserialize(dict["mobile_client_sessions"] ?? .Null)
+                    let activeWebSessions = NullableSerializer(ArraySerializer(Team.ActiveWebSessionSerializer())).deserialize(dict["active_web_sessions"] ?? .null)
+                    let desktopClientSessions = NullableSerializer(ArraySerializer(Team.DesktopClientSessionSerializer())).deserialize(dict["desktop_client_sessions"] ?? .null)
+                    let mobileClientSessions = NullableSerializer(ArraySerializer(Team.MobileClientSessionSerializer())).deserialize(dict["mobile_client_sessions"] ?? .null)
                     return ListMemberDevicesResult(activeWebSessions: activeWebSessions, desktopClientSessions: desktopClientSessions, mobileClientSessions: mobileClientSessions)
                 default:
                     fatalError("Type error deserializing")
@@ -2690,7 +2690,7 @@ public class Team {
         public func deserialize(json: JSON) -> ListMembersAppsArg {
             switch json {
                 case .Dictionary(let dict):
-                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .Null)
+                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
                     return ListMembersAppsArg(cursor: cursor)
                 default:
                     fatalError("Type error deserializing")
@@ -2774,9 +2774,9 @@ public class Team {
         public func deserialize(json: JSON) -> ListMembersAppsResult {
             switch json {
                 case .Dictionary(let dict):
-                    let apps = ArraySerializer(Team.MemberLinkedAppsSerializer()).deserialize(dict["apps"] ?? .Null)
-                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .Null)
-                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .Null)
+                    let apps = ArraySerializer(Team.MemberLinkedAppsSerializer()).deserialize(dict["apps"] ?? .null)
+                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
+                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
                     return ListMembersAppsResult(apps: apps, hasMore: hasMore, cursor: cursor)
                 default:
                     fatalError("Type error deserializing")
@@ -2821,10 +2821,10 @@ public class Team {
         public func deserialize(json: JSON) -> ListMembersDevicesArg {
             switch json {
                 case .Dictionary(let dict):
-                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .Null)
-                    let includeWebSessions = Serialization._BoolSerializer.deserialize(dict["include_web_sessions"] ?? .Null)
-                    let includeDesktopClients = Serialization._BoolSerializer.deserialize(dict["include_desktop_clients"] ?? .Null)
-                    let includeMobileClients = Serialization._BoolSerializer.deserialize(dict["include_mobile_clients"] ?? .Null)
+                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
+                    let includeWebSessions = Serialization._BoolSerializer.deserialize(dict["include_web_sessions"] ?? .number(1))
+                    let includeDesktopClients = Serialization._BoolSerializer.deserialize(dict["include_desktop_clients"] ?? .number(1))
+                    let includeMobileClients = Serialization._BoolSerializer.deserialize(dict["include_mobile_clients"] ?? .number(1))
                     return ListMembersDevicesArg(cursor: cursor, includeWebSessions: includeWebSessions, includeDesktopClients: includeDesktopClients, includeMobileClients: includeMobileClients)
                 default:
                     fatalError("Type error deserializing")
@@ -2908,9 +2908,9 @@ public class Team {
         public func deserialize(json: JSON) -> ListMembersDevicesResult {
             switch json {
                 case .Dictionary(let dict):
-                    let devices = ArraySerializer(Team.MemberDevicesSerializer()).deserialize(dict["devices"] ?? .Null)
-                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .Null)
-                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .Null)
+                    let devices = ArraySerializer(Team.MemberDevicesSerializer()).deserialize(dict["devices"] ?? .null)
+                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
+                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
                     return ListMembersDevicesResult(devices: devices, hasMore: hasMore, cursor: cursor)
                 default:
                     fatalError("Type error deserializing")
@@ -2943,7 +2943,7 @@ public class Team {
         public func deserialize(json: JSON) -> ListTeamAppsArg {
             switch json {
                 case .Dictionary(let dict):
-                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .Null)
+                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
                     return ListTeamAppsArg(cursor: cursor)
                 default:
                     fatalError("Type error deserializing")
@@ -3027,9 +3027,9 @@ public class Team {
         public func deserialize(json: JSON) -> ListTeamAppsResult {
             switch json {
                 case .Dictionary(let dict):
-                    let apps = ArraySerializer(Team.MemberLinkedAppsSerializer()).deserialize(dict["apps"] ?? .Null)
-                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .Null)
-                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .Null)
+                    let apps = ArraySerializer(Team.MemberLinkedAppsSerializer()).deserialize(dict["apps"] ?? .null)
+                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
+                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
                     return ListTeamAppsResult(apps: apps, hasMore: hasMore, cursor: cursor)
                 default:
                     fatalError("Type error deserializing")
@@ -3074,10 +3074,10 @@ public class Team {
         public func deserialize(json: JSON) -> ListTeamDevicesArg {
             switch json {
                 case .Dictionary(let dict):
-                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .Null)
-                    let includeWebSessions = Serialization._BoolSerializer.deserialize(dict["include_web_sessions"] ?? .Null)
-                    let includeDesktopClients = Serialization._BoolSerializer.deserialize(dict["include_desktop_clients"] ?? .Null)
-                    let includeMobileClients = Serialization._BoolSerializer.deserialize(dict["include_mobile_clients"] ?? .Null)
+                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
+                    let includeWebSessions = Serialization._BoolSerializer.deserialize(dict["include_web_sessions"] ?? .number(1))
+                    let includeDesktopClients = Serialization._BoolSerializer.deserialize(dict["include_desktop_clients"] ?? .number(1))
+                    let includeMobileClients = Serialization._BoolSerializer.deserialize(dict["include_mobile_clients"] ?? .number(1))
                     return ListTeamDevicesArg(cursor: cursor, includeWebSessions: includeWebSessions, includeDesktopClients: includeDesktopClients, includeMobileClients: includeMobileClients)
                 default:
                     fatalError("Type error deserializing")
@@ -3161,9 +3161,9 @@ public class Team {
         public func deserialize(json: JSON) -> ListTeamDevicesResult {
             switch json {
                 case .Dictionary(let dict):
-                    let devices = ArraySerializer(Team.MemberDevicesSerializer()).deserialize(dict["devices"] ?? .Null)
-                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .Null)
-                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .Null)
+                    let devices = ArraySerializer(Team.MemberDevicesSerializer()).deserialize(dict["devices"] ?? .null)
+                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
+                    let cursor = NullableSerializer(Serialization._StringSerializer).deserialize(dict["cursor"] ?? .null)
                     return ListTeamDevicesResult(devices: devices, hasMore: hasMore, cursor: cursor)
                 default:
                     fatalError("Type error deserializing")
@@ -3197,8 +3197,8 @@ public class Team {
         public func deserialize(json: JSON) -> MemberAccess {
             switch json {
                 case .Dictionary(let dict):
-                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .Null)
-                    let accessType = Team.GroupAccessTypeSerializer().deserialize(dict["access_type"] ?? .Null)
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
+                    let accessType = Team.GroupAccessTypeSerializer().deserialize(dict["access_type"] ?? .null)
                     return MemberAccess(user: user, accessType: accessType)
                 default:
                     fatalError("Type error deserializing")
@@ -3254,12 +3254,12 @@ public class Team {
         public func deserialize(json: JSON) -> MemberAddArg {
             switch json {
                 case .Dictionary(let dict):
-                    let memberEmail = Serialization._StringSerializer.deserialize(dict["member_email"] ?? .Null)
-                    let memberGivenName = Serialization._StringSerializer.deserialize(dict["member_given_name"] ?? .Null)
-                    let memberSurname = Serialization._StringSerializer.deserialize(dict["member_surname"] ?? .Null)
-                    let memberExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["member_external_id"] ?? .Null)
-                    let sendWelcomeEmail = Serialization._BoolSerializer.deserialize(dict["send_welcome_email"] ?? .Null)
-                    let role = Team.AdminTierSerializer().deserialize(dict["role"] ?? .Null)
+                    let memberEmail = Serialization._StringSerializer.deserialize(dict["member_email"] ?? .null)
+                    let memberGivenName = Serialization._StringSerializer.deserialize(dict["member_given_name"] ?? .null)
+                    let memberSurname = Serialization._StringSerializer.deserialize(dict["member_surname"] ?? .null)
+                    let memberExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["member_external_id"] ?? .null)
+                    let sendWelcomeEmail = Serialization._BoolSerializer.deserialize(dict["send_welcome_email"] ?? .number(1))
+                    let role = Team.AdminTierSerializer().deserialize(dict["role"] ?? Team.AdminTierSerializer().serialize(.memberOnly))
                     return MemberAddArg(memberEmail: memberEmail, memberGivenName: memberGivenName, memberSurname: memberSurname, memberExternalId: memberExternalId, sendWelcomeEmail: sendWelcomeEmail, role: role)
                 default:
                     fatalError("Type error deserializing")
@@ -3414,10 +3414,10 @@ public class Team {
         public func deserialize(json: JSON) -> MemberDevices {
             switch json {
                 case .Dictionary(let dict):
-                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .Null)
-                    let webSessions = NullableSerializer(ArraySerializer(Team.ActiveWebSessionSerializer())).deserialize(dict["web_sessions"] ?? .Null)
-                    let desktopClients = NullableSerializer(ArraySerializer(Team.DesktopClientSessionSerializer())).deserialize(dict["desktop_clients"] ?? .Null)
-                    let mobileClients = NullableSerializer(ArraySerializer(Team.MobileClientSessionSerializer())).deserialize(dict["mobile_clients"] ?? .Null)
+                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
+                    let webSessions = NullableSerializer(ArraySerializer(Team.ActiveWebSessionSerializer())).deserialize(dict["web_sessions"] ?? .null)
+                    let desktopClients = NullableSerializer(ArraySerializer(Team.DesktopClientSessionSerializer())).deserialize(dict["desktop_clients"] ?? .null)
+                    let mobileClients = NullableSerializer(ArraySerializer(Team.MobileClientSessionSerializer())).deserialize(dict["mobile_clients"] ?? .null)
                     return MemberDevices(teamMemberId: teamMemberId, webSessions: webSessions, desktopClients: desktopClients, mobileClients: mobileClients)
                 default:
                     fatalError("Type error deserializing")
@@ -3452,8 +3452,8 @@ public class Team {
         public func deserialize(json: JSON) -> MemberLinkedApps {
             switch json {
                 case .Dictionary(let dict):
-                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .Null)
-                    let linkedApiApps = ArraySerializer(Team.ApiAppSerializer()).deserialize(dict["linked_api_apps"] ?? .Null)
+                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
+                    let linkedApiApps = ArraySerializer(Team.ApiAppSerializer()).deserialize(dict["linked_api_apps"] ?? .null)
                     return MemberLinkedApps(teamMemberId: teamMemberId, linkedApiApps: linkedApiApps)
                 default:
                     fatalError("Type error deserializing")
@@ -3517,14 +3517,14 @@ public class Team {
         public func deserialize(json: JSON) -> MemberProfile {
             switch json {
                 case .Dictionary(let dict):
-                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .Null)
-                    let email = Serialization._StringSerializer.deserialize(dict["email"] ?? .Null)
-                    let emailVerified = Serialization._BoolSerializer.deserialize(dict["email_verified"] ?? .Null)
-                    let status = Team.TeamMemberStatusSerializer().deserialize(dict["status"] ?? .Null)
-                    let name = Users.NameSerializer().deserialize(dict["name"] ?? .Null)
-                    let membershipType = Team.TeamMembershipTypeSerializer().deserialize(dict["membership_type"] ?? .Null)
-                    let externalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["external_id"] ?? .Null)
-                    let accountId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["account_id"] ?? .Null)
+                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
+                    let email = Serialization._StringSerializer.deserialize(dict["email"] ?? .null)
+                    let emailVerified = Serialization._BoolSerializer.deserialize(dict["email_verified"] ?? .null)
+                    let status = Team.TeamMemberStatusSerializer().deserialize(dict["status"] ?? .null)
+                    let name = Users.NameSerializer().deserialize(dict["name"] ?? .null)
+                    let membershipType = Team.TeamMembershipTypeSerializer().deserialize(dict["membership_type"] ?? .null)
+                    let externalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["external_id"] ?? .null)
+                    let accountId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["account_id"] ?? .null)
                     return MemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, externalId: externalId, accountId: accountId)
                 default:
                     fatalError("Type error deserializing")
@@ -3636,8 +3636,8 @@ public class Team {
         public func deserialize(json: JSON) -> MembersAddArg {
             switch json {
                 case .Dictionary(let dict):
-                    let newMembers = ArraySerializer(Team.MemberAddArgSerializer()).deserialize(dict["new_members"] ?? .Null)
-                    let forceAsync = Serialization._BoolSerializer.deserialize(dict["force_async"] ?? .Null)
+                    let newMembers = ArraySerializer(Team.MemberAddArgSerializer()).deserialize(dict["new_members"] ?? .null)
+                    let forceAsync = Serialization._BoolSerializer.deserialize(dict["force_async"] ?? .number(0))
                     return MembersAddArg(newMembers: newMembers, forceAsync: forceAsync)
                 default:
                     fatalError("Type error deserializing")
@@ -3771,8 +3771,8 @@ public class Team {
         public func deserialize(json: JSON) -> MembersDeactivateArg {
             switch json {
                 case .Dictionary(let dict):
-                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .Null)
-                    let wipeData = Serialization._BoolSerializer.deserialize(dict["wipe_data"] ?? .Null)
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
+                    let wipeData = Serialization._BoolSerializer.deserialize(dict["wipe_data"] ?? .number(1))
                     return MembersDeactivateArg(user: user, wipeData: wipeData)
                 default:
                     fatalError("Type error deserializing")
@@ -3853,7 +3853,7 @@ public class Team {
         public func deserialize(json: JSON) -> MembersGetInfoArgs {
             switch json {
                 case .Dictionary(let dict):
-                    let members = ArraySerializer(Team.UserSelectorArgSerializer()).deserialize(dict["members"] ?? .Null)
+                    let members = ArraySerializer(Team.UserSelectorArgSerializer()).deserialize(dict["members"] ?? .null)
                     return MembersGetInfoArgs(members: members)
                 default:
                     fatalError("Type error deserializing")
@@ -3969,8 +3969,8 @@ public class Team {
         public func deserialize(json: JSON) -> MembersListArg {
             switch json {
                 case .Dictionary(let dict):
-                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .Null)
-                    let includeRemoved = Serialization._BoolSerializer.deserialize(dict["include_removed"] ?? .Null)
+                    let limit = Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .number(1000))
+                    let includeRemoved = Serialization._BoolSerializer.deserialize(dict["include_removed"] ?? .number(0))
                     return MembersListArg(limit: limit, includeRemoved: includeRemoved)
                 default:
                     fatalError("Type error deserializing")
@@ -4001,7 +4001,7 @@ public class Team {
         public func deserialize(json: JSON) -> MembersListContinueArg {
             switch json {
                 case .Dictionary(let dict):
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
+                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
                     return MembersListContinueArg(cursor: cursor)
                 default:
                     fatalError("Type error deserializing")
@@ -4119,9 +4119,9 @@ public class Team {
         public func deserialize(json: JSON) -> MembersListResult {
             switch json {
                 case .Dictionary(let dict):
-                    let members = ArraySerializer(Team.TeamMemberInfoSerializer()).deserialize(dict["members"] ?? .Null)
-                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .Null)
-                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .Null)
+                    let members = ArraySerializer(Team.TeamMemberInfoSerializer()).deserialize(dict["members"] ?? .null)
+                    let cursor = Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
+                    let hasMore = Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
                     return MembersListResult(members: members, cursor: cursor, hasMore: hasMore)
                 default:
                     fatalError("Type error deserializing")
@@ -4151,7 +4151,7 @@ public class Team {
         public func deserialize(json: JSON) -> MembersRecoverArg {
             switch json {
                 case .Dictionary(let dict):
-                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .Null)
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
                     return MembersRecoverArg(user: user)
                 default:
                     fatalError("Type error deserializing")
@@ -4253,11 +4253,11 @@ public class Team {
         public func deserialize(json: JSON) -> MembersRemoveArg {
             switch json {
                 case .Dictionary(let dict):
-                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .Null)
-                    let wipeData = Serialization._BoolSerializer.deserialize(dict["wipe_data"] ?? .Null)
-                    let transferDestId = NullableSerializer(Team.UserSelectorArgSerializer()).deserialize(dict["transfer_dest_id"] ?? .Null)
-                    let transferAdminId = NullableSerializer(Team.UserSelectorArgSerializer()).deserialize(dict["transfer_admin_id"] ?? .Null)
-                    let keepAccount = Serialization._BoolSerializer.deserialize(dict["keep_account"] ?? .Null)
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
+                    let wipeData = Serialization._BoolSerializer.deserialize(dict["wipe_data"] ?? .number(1))
+                    let transferDestId = NullableSerializer(Team.UserSelectorArgSerializer()).deserialize(dict["transfer_dest_id"] ?? .null)
+                    let transferAdminId = NullableSerializer(Team.UserSelectorArgSerializer()).deserialize(dict["transfer_admin_id"] ?? .null)
+                    let keepAccount = Serialization._BoolSerializer.deserialize(dict["keep_account"] ?? .number(0))
                     return MembersRemoveArg(user: user, wipeData: wipeData, transferDestId: transferDestId, transferAdminId: transferAdminId, keepAccount: keepAccount)
                 default:
                     fatalError("Type error deserializing")
@@ -4489,8 +4489,8 @@ public class Team {
         public func deserialize(json: JSON) -> MembersSetPermissionsArg {
             switch json {
                 case .Dictionary(let dict):
-                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .Null)
-                    let newRole = Team.AdminTierSerializer().deserialize(dict["new_role"] ?? .Null)
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
+                    let newRole = Team.AdminTierSerializer().deserialize(dict["new_role"] ?? .null)
                     return MembersSetPermissionsArg(user: user, newRole: newRole)
                 default:
                     fatalError("Type error deserializing")
@@ -4600,8 +4600,8 @@ public class Team {
         public func deserialize(json: JSON) -> MembersSetPermissionsResult {
             switch json {
                 case .Dictionary(let dict):
-                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .Null)
-                    let role = Team.AdminTierSerializer().deserialize(dict["role"] ?? .Null)
+                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
+                    let role = Team.AdminTierSerializer().deserialize(dict["role"] ?? .null)
                     return MembersSetPermissionsResult(teamMemberId: teamMemberId, role: role)
                 default:
                     fatalError("Type error deserializing")
@@ -4652,11 +4652,11 @@ public class Team {
         public func deserialize(json: JSON) -> MembersSetProfileArg {
             switch json {
                 case .Dictionary(let dict):
-                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .Null)
-                    let newEmail = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_email"] ?? .Null)
-                    let newExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_external_id"] ?? .Null)
-                    let newGivenName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_given_name"] ?? .Null)
-                    let newSurname = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_surname"] ?? .Null)
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
+                    let newEmail = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_email"] ?? .null)
+                    let newExternalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_external_id"] ?? .null)
+                    let newGivenName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_given_name"] ?? .null)
+                    let newSurname = NullableSerializer(Serialization._StringSerializer).deserialize(dict["new_surname"] ?? .null)
                     return MembersSetProfileArg(user: user, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname)
                 default:
                     fatalError("Type error deserializing")
@@ -4860,7 +4860,7 @@ public class Team {
         public func deserialize(json: JSON) -> MembersUnsuspendArg {
             switch json {
                 case .Dictionary(let dict):
-                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .Null)
+                    let user = Team.UserSelectorArgSerializer().deserialize(dict["user"] ?? .null)
                     return MembersUnsuspendArg(user: user)
                 default:
                     fatalError("Type error deserializing")
@@ -5058,16 +5058,16 @@ public class Team {
         public func deserialize(json: JSON) -> MobileClientSession {
             switch json {
                 case .Dictionary(let dict):
-                    let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .Null)
-                    let deviceName = Serialization._StringSerializer.deserialize(dict["device_name"] ?? .Null)
-                    let clientType = Team.MobileClientPlatformSerializer().deserialize(dict["client_type"] ?? .Null)
-                    let ipAddress = NullableSerializer(Serialization._StringSerializer).deserialize(dict["ip_address"] ?? .Null)
-                    let country = NullableSerializer(Serialization._StringSerializer).deserialize(dict["country"] ?? .Null)
-                    let created = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["created"] ?? .Null)
-                    let updated = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["updated"] ?? .Null)
-                    let clientVersion = NullableSerializer(Serialization._StringSerializer).deserialize(dict["client_version"] ?? .Null)
-                    let osVersion = NullableSerializer(Serialization._StringSerializer).deserialize(dict["os_version"] ?? .Null)
-                    let lastCarrier = NullableSerializer(Serialization._StringSerializer).deserialize(dict["last_carrier"] ?? .Null)
+                    let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
+                    let deviceName = Serialization._StringSerializer.deserialize(dict["device_name"] ?? .null)
+                    let clientType = Team.MobileClientPlatformSerializer().deserialize(dict["client_type"] ?? .null)
+                    let ipAddress = NullableSerializer(Serialization._StringSerializer).deserialize(dict["ip_address"] ?? .null)
+                    let country = NullableSerializer(Serialization._StringSerializer).deserialize(dict["country"] ?? .null)
+                    let created = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["created"] ?? .null)
+                    let updated = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["updated"] ?? .null)
+                    let clientVersion = NullableSerializer(Serialization._StringSerializer).deserialize(dict["client_version"] ?? .null)
+                    let osVersion = NullableSerializer(Serialization._StringSerializer).deserialize(dict["os_version"] ?? .null)
+                    let lastCarrier = NullableSerializer(Serialization._StringSerializer).deserialize(dict["last_carrier"] ?? .null)
                     return MobileClientSession(sessionId: sessionId, deviceName: deviceName, clientType: clientType, ipAddress: ipAddress, country: country, created: created, updated: updated, clientVersion: clientVersion, osVersion: osVersion, lastCarrier: lastCarrier)
                 default:
                     fatalError("Type error deserializing")
@@ -5097,7 +5097,7 @@ public class Team {
         public func deserialize(json: JSON) -> RemovedStatus {
             switch json {
                 case .Dictionary(let dict):
-                    let isRecoverable = Serialization._BoolSerializer.deserialize(dict["is_recoverable"] ?? .Null)
+                    let isRecoverable = Serialization._BoolSerializer.deserialize(dict["is_recoverable"] ?? .null)
                     return RemovedStatus(isRecoverable: isRecoverable)
                 default:
                     fatalError("Type error deserializing")
@@ -5131,9 +5131,9 @@ public class Team {
         public func deserialize(json: JSON) -> RevokeDesktopClientArg {
             switch json {
                 case .Dictionary(let dict):
-                    let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .Null)
-                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .Null)
-                    let deleteOnUnlink = Serialization._BoolSerializer.deserialize(dict["delete_on_unlink"] ?? .Null)
+                    let sessionId = Serialization._StringSerializer.deserialize(dict["session_id"] ?? .null)
+                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
+                    let deleteOnUnlink = Serialization._BoolSerializer.deserialize(dict["delete_on_unlink"] ?? .number(0))
                     return RevokeDesktopClientArg(sessionId: sessionId, teamMemberId: teamMemberId, deleteOnUnlink: deleteOnUnlink)
                 default:
                     fatalError("Type error deserializing")
@@ -5217,7 +5217,7 @@ public class Team {
         public func deserialize(json: JSON) -> RevokeDeviceSessionBatchArg {
             switch json {
                 case .Dictionary(let dict):
-                    let revokeDevices = ArraySerializer(Team.RevokeDeviceSessionArgSerializer()).deserialize(dict["revoke_devices"] ?? .Null)
+                    let revokeDevices = ArraySerializer(Team.RevokeDeviceSessionArgSerializer()).deserialize(dict["revoke_devices"] ?? .null)
                     return RevokeDeviceSessionBatchArg(revokeDevices: revokeDevices)
                 default:
                     fatalError("Type error deserializing")
@@ -5282,7 +5282,7 @@ public class Team {
         public func deserialize(json: JSON) -> RevokeDeviceSessionBatchResult {
             switch json {
                 case .Dictionary(let dict):
-                    let revokeDevicesStatus = ArraySerializer(Team.RevokeDeviceSessionStatusSerializer()).deserialize(dict["revoke_devices_status"] ?? .Null)
+                    let revokeDevicesStatus = ArraySerializer(Team.RevokeDeviceSessionStatusSerializer()).deserialize(dict["revoke_devices_status"] ?? .null)
                     return RevokeDeviceSessionBatchResult(revokeDevicesStatus: revokeDevicesStatus)
                 default:
                     fatalError("Type error deserializing")
@@ -5367,8 +5367,8 @@ public class Team {
         public func deserialize(json: JSON) -> RevokeDeviceSessionStatus {
             switch json {
                 case .Dictionary(let dict):
-                    let success = Serialization._BoolSerializer.deserialize(dict["success"] ?? .Null)
-                    let errorType = NullableSerializer(Team.RevokeDeviceSessionErrorSerializer()).deserialize(dict["error_type"] ?? .Null)
+                    let success = Serialization._BoolSerializer.deserialize(dict["success"] ?? .null)
+                    let errorType = NullableSerializer(Team.RevokeDeviceSessionErrorSerializer()).deserialize(dict["error_type"] ?? .null)
                     return RevokeDeviceSessionStatus(success: success, errorType: errorType)
                 default:
                     fatalError("Type error deserializing")
@@ -5408,9 +5408,9 @@ public class Team {
         public func deserialize(json: JSON) -> RevokeLinkedApiAppArg {
             switch json {
                 case .Dictionary(let dict):
-                    let appId = Serialization._StringSerializer.deserialize(dict["app_id"] ?? .Null)
-                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .Null)
-                    let keepAppFolder = Serialization._BoolSerializer.deserialize(dict["keep_app_folder"] ?? .Null)
+                    let appId = Serialization._StringSerializer.deserialize(dict["app_id"] ?? .null)
+                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
+                    let keepAppFolder = Serialization._BoolSerializer.deserialize(dict["keep_app_folder"] ?? .number(1))
                     return RevokeLinkedApiAppArg(appId: appId, teamMemberId: teamMemberId, keepAppFolder: keepAppFolder)
                 default:
                     fatalError("Type error deserializing")
@@ -5440,7 +5440,7 @@ public class Team {
         public func deserialize(json: JSON) -> RevokeLinkedApiAppBatchArg {
             switch json {
                 case .Dictionary(let dict):
-                    let revokeLinkedApp = ArraySerializer(Team.RevokeLinkedApiAppArgSerializer()).deserialize(dict["revoke_linked_app"] ?? .Null)
+                    let revokeLinkedApp = ArraySerializer(Team.RevokeLinkedApiAppArgSerializer()).deserialize(dict["revoke_linked_app"] ?? .null)
                     return RevokeLinkedApiAppBatchArg(revokeLinkedApp: revokeLinkedApp)
                 default:
                     fatalError("Type error deserializing")
@@ -5505,7 +5505,7 @@ public class Team {
         public func deserialize(json: JSON) -> RevokeLinkedAppBatchResult {
             switch json {
                 case .Dictionary(let dict):
-                    let revokeLinkedAppStatus = ArraySerializer(Team.RevokeLinkedAppStatusSerializer()).deserialize(dict["revoke_linked_app_status"] ?? .Null)
+                    let revokeLinkedAppStatus = ArraySerializer(Team.RevokeLinkedAppStatusSerializer()).deserialize(dict["revoke_linked_app_status"] ?? .null)
                     return RevokeLinkedAppBatchResult(revokeLinkedAppStatus: revokeLinkedAppStatus)
                 default:
                     fatalError("Type error deserializing")
@@ -5590,8 +5590,8 @@ public class Team {
         public func deserialize(json: JSON) -> RevokeLinkedAppStatus {
             switch json {
                 case .Dictionary(let dict):
-                    let success = Serialization._BoolSerializer.deserialize(dict["success"] ?? .Null)
-                    let errorType = NullableSerializer(Team.RevokeLinkedAppErrorSerializer()).deserialize(dict["error_type"] ?? .Null)
+                    let success = Serialization._BoolSerializer.deserialize(dict["success"] ?? .null)
+                    let errorType = NullableSerializer(Team.RevokeLinkedAppErrorSerializer()).deserialize(dict["error_type"] ?? .null)
                     return RevokeLinkedAppStatus(success: success, errorType: errorType)
                 default:
                     fatalError("Type error deserializing")
@@ -5627,8 +5627,8 @@ public class Team {
         public func deserialize(json: JSON) -> StorageBucket {
             switch json {
                 case .Dictionary(let dict):
-                    let bucket = Serialization._StringSerializer.deserialize(dict["bucket"] ?? .Null)
-                    let users = Serialization._UInt64Serializer.deserialize(dict["users"] ?? .Null)
+                    let bucket = Serialization._StringSerializer.deserialize(dict["bucket"] ?? .null)
+                    let users = Serialization._UInt64Serializer.deserialize(dict["users"] ?? .null)
                     return StorageBucket(bucket: bucket, users: users)
                 default:
                     fatalError("Type error deserializing")
@@ -5678,11 +5678,11 @@ public class Team {
         public func deserialize(json: JSON) -> TeamGetInfoResult {
             switch json {
                 case .Dictionary(let dict):
-                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
-                    let teamId = Serialization._StringSerializer.deserialize(dict["team_id"] ?? .Null)
-                    let numLicensedUsers = Serialization._UInt32Serializer.deserialize(dict["num_licensed_users"] ?? .Null)
-                    let numProvisionedUsers = Serialization._UInt32Serializer.deserialize(dict["num_provisioned_users"] ?? .Null)
-                    let policies = TeamPolicies.TeamMemberPoliciesSerializer().deserialize(dict["policies"] ?? .Null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let teamId = Serialization._StringSerializer.deserialize(dict["team_id"] ?? .null)
+                    let numLicensedUsers = Serialization._UInt32Serializer.deserialize(dict["num_licensed_users"] ?? .null)
+                    let numProvisionedUsers = Serialization._UInt32Serializer.deserialize(dict["num_provisioned_users"] ?? .null)
+                    let policies = TeamPolicies.TeamMemberPoliciesSerializer().deserialize(dict["policies"] ?? .null)
                     return TeamGetInfoResult(name: name, teamId: teamId, numLicensedUsers: numLicensedUsers, numProvisionedUsers: numProvisionedUsers, policies: policies)
                 default:
                     fatalError("Type error deserializing")
@@ -5716,8 +5716,8 @@ public class Team {
         public func deserialize(json: JSON) -> TeamMemberInfo {
             switch json {
                 case .Dictionary(let dict):
-                    let profile = Team.TeamMemberProfileSerializer().deserialize(dict["profile"] ?? .Null)
-                    let role = Team.AdminTierSerializer().deserialize(dict["role"] ?? .Null)
+                    let profile = Team.TeamMemberProfileSerializer().deserialize(dict["profile"] ?? .null)
+                    let role = Team.AdminTierSerializer().deserialize(dict["role"] ?? .null)
                     return TeamMemberInfo(profile: profile, role: role)
                 default:
                     fatalError("Type error deserializing")
@@ -5757,15 +5757,15 @@ public class Team {
         public func deserialize(json: JSON) -> TeamMemberProfile {
             switch json {
                 case .Dictionary(let dict):
-                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .Null)
-                    let email = Serialization._StringSerializer.deserialize(dict["email"] ?? .Null)
-                    let emailVerified = Serialization._BoolSerializer.deserialize(dict["email_verified"] ?? .Null)
-                    let status = Team.TeamMemberStatusSerializer().deserialize(dict["status"] ?? .Null)
-                    let name = Users.NameSerializer().deserialize(dict["name"] ?? .Null)
-                    let membershipType = Team.TeamMembershipTypeSerializer().deserialize(dict["membership_type"] ?? .Null)
-                    let groups = ArraySerializer(Serialization._StringSerializer).deserialize(dict["groups"] ?? .Null)
-                    let externalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["external_id"] ?? .Null)
-                    let accountId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["account_id"] ?? .Null)
+                    let teamMemberId = Serialization._StringSerializer.deserialize(dict["team_member_id"] ?? .null)
+                    let email = Serialization._StringSerializer.deserialize(dict["email"] ?? .null)
+                    let emailVerified = Serialization._BoolSerializer.deserialize(dict["email_verified"] ?? .null)
+                    let status = Team.TeamMemberStatusSerializer().deserialize(dict["status"] ?? .null)
+                    let name = Users.NameSerializer().deserialize(dict["name"] ?? .null)
+                    let membershipType = Team.TeamMembershipTypeSerializer().deserialize(dict["membership_type"] ?? .null)
+                    let groups = ArraySerializer(Serialization._StringSerializer).deserialize(dict["groups"] ?? .null)
+                    let externalId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["external_id"] ?? .null)
+                    let accountId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["account_id"] ?? .null)
                     return TeamMemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified, status: status, name: name, membershipType: membershipType, groups: groups, externalId: externalId, accountId: accountId)
                 default:
                     fatalError("Type error deserializing")
@@ -5916,10 +5916,10 @@ public class Team {
         public func deserialize(json: JSON) -> UpdatePropertyTemplateArg {
             switch json {
                 case .Dictionary(let dict):
-                    let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .Null)
-                    let name = NullableSerializer(Serialization._StringSerializer).deserialize(dict["name"] ?? .Null)
-                    let description_ = NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .Null)
-                    let addFields = NullableSerializer(ArraySerializer(Properties.PropertyFieldTemplateSerializer())).deserialize(dict["add_fields"] ?? .Null)
+                    let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
+                    let name = NullableSerializer(Serialization._StringSerializer).deserialize(dict["name"] ?? .null)
+                    let description_ = NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
+                    let addFields = NullableSerializer(ArraySerializer(Properties.PropertyFieldTemplateSerializer())).deserialize(dict["add_fields"] ?? .null)
                     return UpdatePropertyTemplateArg(templateId: templateId, name: name, description_: description_, addFields: addFields)
                 default:
                     fatalError("Type error deserializing")
@@ -5950,7 +5950,7 @@ public class Team {
         public func deserialize(json: JSON) -> UpdatePropertyTemplateResult {
             switch json {
                 case .Dictionary(let dict):
-                    let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .Null)
+                    let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
                     return UpdatePropertyTemplateResult(templateId: templateId)
                 default:
                     fatalError("Type error deserializing")

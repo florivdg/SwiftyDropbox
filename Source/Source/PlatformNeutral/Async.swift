@@ -114,7 +114,7 @@ public class Async {
         public func deserialize(json: JSON) -> PollArg {
             switch json {
                 case .Dictionary(let dict):
-                    let asyncJobId = Serialization._StringSerializer.deserialize(dict["async_job_id"] ?? .Null)
+                    let asyncJobId = Serialization._StringSerializer.deserialize(dict["async_job_id"] ?? .null)
                     return PollArg(asyncJobId: asyncJobId)
                 default:
                     fatalError("Type error deserializing")

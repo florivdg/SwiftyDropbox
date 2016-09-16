@@ -258,8 +258,8 @@ public class TeamPolicies {
         public func deserialize(json: JSON) -> TeamMemberPolicies {
             switch json {
                 case .Dictionary(let dict):
-                    let sharing = TeamPolicies.TeamSharingPoliciesSerializer().deserialize(dict["sharing"] ?? .Null)
-                    let emmState = TeamPolicies.EmmStateSerializer().deserialize(dict["emm_state"] ?? .Null)
+                    let sharing = TeamPolicies.TeamSharingPoliciesSerializer().deserialize(dict["sharing"] ?? .null)
+                    let emmState = TeamPolicies.EmmStateSerializer().deserialize(dict["emm_state"] ?? .null)
                     return TeamMemberPolicies(sharing: sharing, emmState: emmState)
                 default:
                     fatalError("Type error deserializing")
@@ -297,9 +297,9 @@ public class TeamPolicies {
         public func deserialize(json: JSON) -> TeamSharingPolicies {
             switch json {
                 case .Dictionary(let dict):
-                    let sharedFolderMemberPolicy = TeamPolicies.SharedFolderMemberPolicySerializer().deserialize(dict["shared_folder_member_policy"] ?? .Null)
-                    let sharedFolderJoinPolicy = TeamPolicies.SharedFolderJoinPolicySerializer().deserialize(dict["shared_folder_join_policy"] ?? .Null)
-                    let sharedLinkCreatePolicy = TeamPolicies.SharedLinkCreatePolicySerializer().deserialize(dict["shared_link_create_policy"] ?? .Null)
+                    let sharedFolderMemberPolicy = TeamPolicies.SharedFolderMemberPolicySerializer().deserialize(dict["shared_folder_member_policy"] ?? .null)
+                    let sharedFolderJoinPolicy = TeamPolicies.SharedFolderJoinPolicySerializer().deserialize(dict["shared_folder_join_policy"] ?? .null)
+                    let sharedLinkCreatePolicy = TeamPolicies.SharedLinkCreatePolicySerializer().deserialize(dict["shared_link_create_policy"] ?? .null)
                     return TeamSharingPolicies(sharedFolderMemberPolicy: sharedFolderMemberPolicy, sharedFolderJoinPolicy: sharedFolderJoinPolicy, sharedLinkCreatePolicy: sharedLinkCreatePolicy)
                 default:
                     fatalError("Type error deserializing")

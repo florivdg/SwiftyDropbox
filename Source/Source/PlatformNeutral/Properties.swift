@@ -29,7 +29,7 @@ public class Properties {
         public func deserialize(json: JSON) -> GetPropertyTemplateArg {
             switch json {
                 case .Dictionary(let dict):
-                    let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .Null)
+                    let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
                     return GetPropertyTemplateArg(templateId: templateId)
                 default:
                     fatalError("Type error deserializing")
@@ -70,9 +70,9 @@ public class Properties {
         public func deserialize(json: JSON) -> PropertyGroupTemplate {
             switch json {
                 case .Dictionary(let dict):
-                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
-                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .Null)
-                    let fields = ArraySerializer(Properties.PropertyFieldTemplateSerializer()).deserialize(dict["fields"] ?? .Null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    let fields = ArraySerializer(Properties.PropertyFieldTemplateSerializer()).deserialize(dict["fields"] ?? .null)
                     return PropertyGroupTemplate(name: name, description_: description_, fields: fields)
                 default:
                     fatalError("Type error deserializing")
@@ -99,9 +99,9 @@ public class Properties {
         public func deserialize(json: JSON) -> GetPropertyTemplateResult {
             switch json {
                 case .Dictionary(let dict):
-                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
-                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .Null)
-                    let fields = ArraySerializer(Properties.PropertyFieldTemplateSerializer()).deserialize(dict["fields"] ?? .Null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    let fields = ArraySerializer(Properties.PropertyFieldTemplateSerializer()).deserialize(dict["fields"] ?? .null)
                     return GetPropertyTemplateResult(name: name, description_: description_, fields: fields)
                 default:
                     fatalError("Type error deserializing")
@@ -132,7 +132,7 @@ public class Properties {
         public func deserialize(json: JSON) -> ListPropertyTemplateIds {
             switch json {
                 case .Dictionary(let dict):
-                    let templateIds = ArraySerializer(Serialization._StringSerializer).deserialize(dict["template_ids"] ?? .Null)
+                    let templateIds = ArraySerializer(Serialization._StringSerializer).deserialize(dict["template_ids"] ?? .null)
                     return ListPropertyTemplateIds(templateIds: templateIds)
                 default:
                     fatalError("Type error deserializing")
@@ -305,8 +305,8 @@ public class Properties {
         public func deserialize(json: JSON) -> PropertyField {
             switch json {
                 case .Dictionary(let dict):
-                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
-                    let value = Serialization._StringSerializer.deserialize(dict["value"] ?? .Null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let value = Serialization._StringSerializer.deserialize(dict["value"] ?? .null)
                     return PropertyField(name: name, value: value)
                 default:
                     fatalError("Type error deserializing")
@@ -349,9 +349,9 @@ public class Properties {
         public func deserialize(json: JSON) -> PropertyFieldTemplate {
             switch json {
                 case .Dictionary(let dict):
-                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .Null)
-                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .Null)
-                    let type = Properties.PropertyTypeSerializer().deserialize(dict["type"] ?? .Null)
+                    let name = Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    let description_ = Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    let type = Properties.PropertyTypeSerializer().deserialize(dict["type"] ?? .null)
                     return PropertyFieldTemplate(name: name, description_: description_, type: type)
                 default:
                     fatalError("Type error deserializing")
@@ -386,8 +386,8 @@ public class Properties {
         public func deserialize(json: JSON) -> PropertyGroup {
             switch json {
                 case .Dictionary(let dict):
-                    let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .Null)
-                    let fields = ArraySerializer(Properties.PropertyFieldSerializer()).deserialize(dict["fields"] ?? .Null)
+                    let templateId = Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
+                    let fields = ArraySerializer(Properties.PropertyFieldSerializer()).deserialize(dict["fields"] ?? .null)
                     return PropertyGroup(templateId: templateId, fields: fields)
                 default:
                     fatalError("Type error deserializing")
