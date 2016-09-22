@@ -7,6 +7,35 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		542B34671D9276C500C183BC /* SwiftyDropbox_tvOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 542B34651D9276C500C183BC /* SwiftyDropbox_tvOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		542B346F1D92799100C183BC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 542B346E1D92799100C183BC /* Foundation.framework */; };
+		542B34711D92799700C183BC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 542B34701D92799700C183BC /* UIKit.framework */; };
+		542B34731D927A0900C183BC /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC2081D90AA8800A3F50D /* Async.swift */; };
+		542B34741D927A0B00C183BC /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC2091D90AA8800A3F50D /* Auth.swift */; };
+		542B34751D927A0E00C183BC /* AuthRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC20A1D90AA8800A3F50D /* AuthRoutes.swift */; };
+		542B34761D927A1000C183BC /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC20B1D90AA8800A3F50D /* Base.swift */; };
+		542B34771D927A1200C183BC /* BaseTeam.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC20C1D90AA8800A3F50D /* BaseTeam.swift */; };
+		542B34781D927A1500C183BC /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC20D1D90AA8800A3F50D /* Common.swift */; };
+		542B34791D927A1700C183BC /* DropboxClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC20E1D90AA8800A3F50D /* DropboxClient.swift */; };
+		542B347A1D927A1900C183BC /* DropboxClientsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC20F1D90AA8800A3F50D /* DropboxClientsManager.swift */; };
+		542B347B1D927A1F00C183BC /* DropboxTeamClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC2101D90AA8800A3F50D /* DropboxTeamClient.swift */; };
+		542B347C1D927A1F00C183BC /* DropboxTransportClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC2111D90AA8800A3F50D /* DropboxTransportClient.swift */; };
+		542B347D1D927A1F00C183BC /* Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC2121D90AA8800A3F50D /* Files.swift */; };
+		542B347E1D927A1F00C183BC /* FilesRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC2131D90AA8800A3F50D /* FilesRoutes.swift */; };
+		542B347F1D927A1F00C183BC /* OAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC2141D90AA8800A3F50D /* OAuth.swift */; };
+		542B34801D927A1F00C183BC /* Properties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC2151D90AA8800A3F50D /* Properties.swift */; };
+		542B34811D927A1F00C183BC /* Sharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC2161D90AA8800A3F50D /* Sharing.swift */; };
+		542B34821D927A1F00C183BC /* SharingRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC2171D90AA8800A3F50D /* SharingRoutes.swift */; };
+		542B34831D927A1F00C183BC /* StoneBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC2181D90AA8800A3F50D /* StoneBase.swift */; };
+		542B34841D927A1F00C183BC /* StoneSerializers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC2191D90AA8800A3F50D /* StoneSerializers.swift */; };
+		542B34851D927A1F00C183BC /* StoneValidators.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC21A1D90AA8800A3F50D /* StoneValidators.swift */; };
+		542B34861D927A1F00C183BC /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC21B1D90AA8800A3F50D /* Team.swift */; };
+		542B34871D927A1F00C183BC /* TeamCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC21C1D90AA8800A3F50D /* TeamCommon.swift */; };
+		542B34881D927A1F00C183BC /* TeamPolicies.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC21D1D90AA8800A3F50D /* TeamPolicies.swift */; };
+		542B34891D927A1F00C183BC /* TeamRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC21E1D90AA8800A3F50D /* TeamRoutes.swift */; };
+		542B348A1D927A1F00C183BC /* Users.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC21F1D90AA8800A3F50D /* Users.swift */; };
+		542B348B1D927A1F00C183BC /* UsersRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC2201D90AA8800A3F50D /* UsersRoutes.swift */; };
+		547037831D93C9220023D862 /* OAuthTV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 547037801D93C8C10023D862 /* OAuthTV.swift */; };
 		F20CC2031D90AA6B00A3F50D /* OAuthMobile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC2021D90AA6B00A3F50D /* OAuthMobile.swift */; };
 		F20CC2061D90AA7100A3F50D /* OAuthDesktop.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC2051D90AA7100A3F50D /* OAuthDesktop.swift */; };
 		F20CC2211D90AA8800A3F50D /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20CC2081D90AA8800A3F50D /* Async.swift */; };
@@ -70,6 +99,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		542B34631D9276C500C183BC /* SwiftyDropbox_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftyDropbox_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		542B34651D9276C500C183BC /* SwiftyDropbox_tvOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftyDropbox_tvOS.h; sourceTree = "<group>"; };
+		542B34661D9276C500C183BC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		542B346E1D92799100C183BC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS10.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		542B34701D92799700C183BC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS10.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		547037801D93C8C10023D862 /* OAuthTV.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OAuthTV.swift; path = PlatformDependent/tvOS/OAuthTV.swift; sourceTree = SOURCE_ROOT; };
 		F20CC2021D90AA6B00A3F50D /* OAuthMobile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuthMobile.swift; sourceTree = "<group>"; };
 		F20CC2051D90AA7100A3F50D /* OAuthDesktop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuthDesktop.swift; sourceTree = "<group>"; };
 		F20CC2081D90AA8800A3F50D /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
@@ -112,6 +147,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		542B345F1D9276C500C183BC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				542B34711D92799700C183BC /* UIKit.framework in Frameworks */,
+				542B346F1D92799100C183BC /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F2C6FCC11D89E16800E0DD9E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -135,6 +179,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		542B34641D9276C500C183BC /* SwiftyDropbox_tvOS */ = {
+			isa = PBXGroup;
+			children = (
+				547037821D93C8C40023D862 /* tvOS */,
+				542B34651D9276C500C183BC /* SwiftyDropbox_tvOS.h */,
+				542B34661D9276C500C183BC /* Info.plist */,
+			);
+			path = SwiftyDropbox_tvOS;
+			sourceTree = "<group>";
+		};
+		547037821D93C8C40023D862 /* tvOS */ = {
+			isa = PBXGroup;
+			children = (
+				547037801D93C8C10023D862 /* OAuthTV.swift */,
+			);
+			name = tvOS;
+			sourceTree = "<group>";
+		};
 		F20CC2011D90AA6B00A3F50D /* iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -190,6 +252,7 @@
 			children = (
 				F2C6FCC71D89E16800E0DD9E /* SwiftyDropbox */,
 				F2C6FCD61D89E1A900E0DD9E /* SwiftyDropbox_macOS */,
+				542B34641D9276C500C183BC /* SwiftyDropbox_tvOS */,
 				F20CC2071D90AA8800A3F50D /* PlatformNeutral */,
 				F2C6FCC61D89E16800E0DD9E /* Products */,
 				F2C6FD351D89E37500E0DD9E /* Frameworks */,
@@ -201,6 +264,7 @@
 			children = (
 				F2C6FCC51D89E16800E0DD9E /* SwiftyDropbox.framework */,
 				F2C6FCD51D89E1A900E0DD9E /* SwiftyDropbox_macOS.framework */,
+				542B34631D9276C500C183BC /* SwiftyDropbox_tvOS.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -228,6 +292,8 @@
 		F2C6FD351D89E37500E0DD9E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				542B34701D92799700C183BC /* UIKit.framework */,
+				542B346E1D92799100C183BC /* Foundation.framework */,
 				F2C54A9F1D89F6FA003A2675 /* Alamofire.framework */,
 				F2C54A9D1D89F6F0003A2675 /* Alamofire.framework */,
 				F2C6FD3C1D89E38800E0DD9E /* Foundation.framework */,
@@ -241,6 +307,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		542B34601D9276C500C183BC /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				542B34671D9276C500C183BC /* SwiftyDropbox_tvOS.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F2C6FCC21D89E16800E0DD9E /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -260,6 +334,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		542B34621D9276C500C183BC /* SwiftyDropbox_tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 542B346A1D9276C500C183BC /* Build configuration list for PBXNativeTarget "SwiftyDropbox_tvOS" */;
+			buildPhases = (
+				542B345E1D9276C500C183BC /* Sources */,
+				542B345F1D9276C500C183BC /* Frameworks */,
+				542B34601D9276C500C183BC /* Headers */,
+				542B34611D9276C500C183BC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SwiftyDropbox_tvOS;
+			productName = SwiftyDropbox_tvOS;
+			productReference = 542B34631D9276C500C183BC /* SwiftyDropbox_tvOS.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		F2C6FCC41D89E16800E0DD9E /* SwiftyDropbox */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F2C6FCCD1D89E16800E0DD9E /* Build configuration list for PBXNativeTarget "SwiftyDropbox" */;
@@ -305,6 +397,11 @@
 				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = Dropbox;
 				TargetAttributes = {
+					542B34621D9276C500C183BC = {
+						CreatedOnToolsVersion = 8.0;
+						LastSwiftMigration = 0800;
+						ProvisioningStyle = Automatic;
+					};
 					F2C6FCC41D89E16800E0DD9E = {
 						CreatedOnToolsVersion = 8.0;
 						LastSwiftMigration = 0800;
@@ -330,11 +427,19 @@
 			targets = (
 				F2C6FCC41D89E16800E0DD9E /* SwiftyDropbox */,
 				F2C6FCD41D89E1A900E0DD9E /* SwiftyDropbox_macOS */,
+				542B34621D9276C500C183BC /* SwiftyDropbox_tvOS */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		542B34611D9276C500C183BC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F2C6FCC31D89E16800E0DD9E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -352,6 +457,39 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		542B345E1D9276C500C183BC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				542B34841D927A1F00C183BC /* StoneSerializers.swift in Sources */,
+				542B34731D927A0900C183BC /* Async.swift in Sources */,
+				542B347F1D927A1F00C183BC /* OAuth.swift in Sources */,
+				542B34771D927A1200C183BC /* BaseTeam.swift in Sources */,
+				542B34801D927A1F00C183BC /* Properties.swift in Sources */,
+				542B34831D927A1F00C183BC /* StoneBase.swift in Sources */,
+				542B34811D927A1F00C183BC /* Sharing.swift in Sources */,
+				542B347E1D927A1F00C183BC /* FilesRoutes.swift in Sources */,
+				542B347B1D927A1F00C183BC /* DropboxTeamClient.swift in Sources */,
+				542B34861D927A1F00C183BC /* Team.swift in Sources */,
+				542B348B1D927A1F00C183BC /* UsersRoutes.swift in Sources */,
+				547037831D93C9220023D862 /* OAuthTV.swift in Sources */,
+				542B347C1D927A1F00C183BC /* DropboxTransportClient.swift in Sources */,
+				542B348A1D927A1F00C183BC /* Users.swift in Sources */,
+				542B34891D927A1F00C183BC /* TeamRoutes.swift in Sources */,
+				542B347D1D927A1F00C183BC /* Files.swift in Sources */,
+				542B34821D927A1F00C183BC /* SharingRoutes.swift in Sources */,
+				542B34791D927A1700C183BC /* DropboxClient.swift in Sources */,
+				542B34851D927A1F00C183BC /* StoneValidators.swift in Sources */,
+				542B347A1D927A1900C183BC /* DropboxClientsManager.swift in Sources */,
+				542B34871D927A1F00C183BC /* TeamCommon.swift in Sources */,
+				542B34761D927A1000C183BC /* Base.swift in Sources */,
+				542B34881D927A1F00C183BC /* TeamPolicies.swift in Sources */,
+				542B34741D927A0B00C183BC /* Auth.swift in Sources */,
+				542B34751D927A0E00C183BC /* AuthRoutes.swift in Sources */,
+				542B34781D927A1500C183BC /* Common.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F2C6FCC01D89E16800E0DD9E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -421,6 +559,51 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		542B34681D9276C500C183BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = SwiftyDropbox_tvOS/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "me.florianweich.SwiftyDropbox-tvOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.2;
+			};
+			name = Debug;
+		};
+		542B34691D9276C500C183BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = SwiftyDropbox_tvOS/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "me.florianweich.SwiftyDropbox-tvOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.2;
+			};
+			name = Release;
+		};
 		F2C6FCCB1D89E16800E0DD9E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -607,6 +790,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		542B346A1D9276C500C183BC /* Build configuration list for PBXNativeTarget "SwiftyDropbox_tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				542B34681D9276C500C183BC /* Debug */,
+				542B34691D9276C500C183BC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F2C6FCBF1D89E16800E0DD9E /* Build configuration list for PBXProject "SwiftyDropbox" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
