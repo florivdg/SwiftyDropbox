@@ -1,14 +1,15 @@
 Pod::Spec.new do |s|
   s.name         = 'SwiftyDropbox'
-  s.version      = '4.0.3'
+  s.version      = '4.1.2'
   s.summary      = 'Dropbox Swift SDK for API v2'
   s.homepage     = 'https://dropbox.com/developers/'
   s.license      = 'MIT'
   s.author       = { 'Stephen Cobbe' => 'scobbe@dropbox.com' }
   s.source       = { :git => 'https://github.com/dropbox/SwiftyDropbox.git', :tag => s.version }
 
-  s.osx.source_files = 'Source/SwiftyDropbox/SwiftyDropbox_macOS/SwiftyDropbox_macOS.h', 'Source/SwiftyDropbox/PlatformNeutral/*.{h,m,swift}', 'Source/SwiftyDropbox/PlatformDependent/macOS/*.{h,m,swift}'
-  s.ios.source_files = 'Source/SwiftyDropbox/SwiftyDropbox/SwiftyDropbox.h', 'Source/SwiftyDropbox/PlatformNeutral/*.{h,m,swift}', 'Source/SwiftyDropbox/PlatformDependent/iOS/*.{h,m,swift}'
+  s.source_files = 'Source/SwiftyDropbox/Shared/**/*.{swift,h,m}'
+  s.osx.source_files = 'Source/SwiftyDropbox/Platform/SwiftyDropbox_macOS/**/*.{swift,h,m}'
+  s.ios.source_files = 'Source/SwiftyDropbox/Platform/SwiftyDropbox_iOS/**/*.{swift,h,m}'
   s.tvos.source_files = 'Source/SwiftyDropbox/SwiftyDropbox/SwiftyDropbox.h', 'Source/SwiftyDropbox/PlatformNeutral/*.{h,m,swift}', 'Source/SwiftyDropbox/PlatformDependent/tvOS/*.{h,m,swift}'
 
   s.requires_arc = true
@@ -17,9 +18,9 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '9.0'
   s.tvos.deployment_target = '9.0'
 
-  s.osx.frameworks = 'AppKit', 'Foundation'
-  s.ios.frameworks = 'UIKit', 'Foundation'
+  s.osx.frameworks = 'AppKit', 'WebKit', 'SystemConfiguration', 'Foundation'
+  s.ios.frameworks = 'UIKit', 'WebKit', 'SystemConfiguration', 'Foundation'
   s.tvos.frameworks = 'Foundation'
 
-  s.dependency       'Alamofire', '~> 4.0.0'
+  s.dependency       'Alamofire', '~> 4.4.0'
 end

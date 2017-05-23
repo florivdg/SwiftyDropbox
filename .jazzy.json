@@ -7,8 +7,10 @@
       "children": [
         "AuthRoutes", 
         "FilesRoutes", 
+        "PaperRoutes", 
         "SharingRoutes", 
         "TeamRoutes", 
+        "TeamLogRoutes", 
         "UsersRoutes"
       ]
     }, 
@@ -19,19 +21,22 @@
         "Auth", 
         "Common", 
         "Files", 
+        "Paper", 
         "Properties", 
         "Sharing", 
         "Team", 
         "TeamCommon", 
+        "TeamLog", 
         "TeamPolicies", 
-        "Users"
+        "Users", 
+        "UsersCommon"
       ]
     }, 
     {
       "name": "Authentication", 
       "children": [
-        "DropboxAuthManager", 
-        "DropboxAuthResult", 
+        "DropboxOAuthManager", 
+        "DropboxOAuthResult", 
         "DropboxAccessToken", 
         "OAuth2Error"
       ]
