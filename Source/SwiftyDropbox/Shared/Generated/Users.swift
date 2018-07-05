@@ -137,7 +137,9 @@ open class Users {
         open let isPaired: Bool
         /// What type of account this user has.
         open let accountType: UsersCommon.AccountType
-        public init(accountId: String, name: Users.Name, email: String, emailVerified: Bool, disabled: Bool, locale: String, referralLink: String, isPaired: Bool, accountType: UsersCommon.AccountType, profilePhotoUrl: String? = nil, country: String? = nil, team: Users.FullTeam? = nil, teamMemberId: String? = nil) {
+        /// The root info for this account.
+        open let rootInfo: Common.RootInfo
+        public init(accountId: String, name: Users.Name, email: String, emailVerified: Bool, disabled: Bool, locale: String, referralLink: String, isPaired: Bool, accountType: UsersCommon.AccountType, rootInfo: Common.RootInfo, profilePhotoUrl: String? = nil, country: String? = nil, team: Users.FullTeam? = nil, teamMemberId: String? = nil) {
             nullableValidator(stringValidator(minLength: 2, maxLength: 2))(country)
             self.country = country
             stringValidator(minLength: 2)(locale)
@@ -149,6 +151,7 @@ open class Users {
             self.teamMemberId = teamMemberId
             self.isPaired = isPaired
             self.accountType = accountType
+            self.rootInfo = rootInfo
             super.init(accountId: accountId, name: name, email: email, emailVerified: emailVerified, disabled: disabled, profilePhotoUrl: profilePhotoUrl)
         }
         open override var description: String {
@@ -168,6 +171,7 @@ open class Users {
             "referral_link": Serialization._StringSerializer.serialize(value.referralLink),
             "is_paired": Serialization._BoolSerializer.serialize(value.isPaired),
             "account_type": UsersCommon.AccountTypeSerializer().serialize(value.accountType),
+            "root_info": Common.RootInfoSerializer().serialize(value.rootInfo),
             "profile_photo_url": NullableSerializer(Serialization._StringSerializer).serialize(value.profilePhotoUrl),
             "country": NullableSerializer(Serialization._StringSerializer).serialize(value.country),
             "team": NullableSerializer(Users.FullTeamSerializer()).serialize(value.team),
@@ -187,11 +191,12 @@ open class Users {
                     let referralLink = Serialization._StringSerializer.deserialize(dict["referral_link"] ?? .null)
                     let isPaired = Serialization._BoolSerializer.deserialize(dict["is_paired"] ?? .null)
                     let accountType = UsersCommon.AccountTypeSerializer().deserialize(dict["account_type"] ?? .null)
+                    let rootInfo = Common.RootInfoSerializer().deserialize(dict["root_info"] ?? .null)
                     let profilePhotoUrl = NullableSerializer(Serialization._StringSerializer).deserialize(dict["profile_photo_url"] ?? .null)
                     let country = NullableSerializer(Serialization._StringSerializer).deserialize(dict["country"] ?? .null)
                     let team = NullableSerializer(Users.FullTeamSerializer()).deserialize(dict["team"] ?? .null)
                     let teamMemberId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["team_member_id"] ?? .null)
-                    return FullAccount(accountId: accountId, name: name, email: email, emailVerified: emailVerified, disabled: disabled, locale: locale, referralLink: referralLink, isPaired: isPaired, accountType: accountType, profilePhotoUrl: profilePhotoUrl, country: country, team: team, teamMemberId: teamMemberId)
+                    return FullAccount(accountId: accountId, name: name, email: email, emailVerified: emailVerified, disabled: disabled, locale: locale, referralLink: referralLink, isPaired: isPaired, accountType: accountType, rootInfo: rootInfo, profilePhotoUrl: profilePhotoUrl, country: country, team: team, teamMemberId: teamMemberId)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -606,11 +611,19 @@ open class Users {
         open let used: UInt64
         /// The total space allocated to the user's team (bytes).
         open let allocated: UInt64
-        public init(used: UInt64, allocated: UInt64) {
+        /// The total space allocated to the user within its team allocated space (0 means that no restriction is
+        /// imposed on the user's quota within its team).
+        open let userWithinTeamSpaceAllocated: UInt64
+        /// The type of the space limit imposed on the team member (off, alert_only, stop_sync).
+        open let userWithinTeamSpaceLimitType: TeamCommon.MemberSpaceLimitType
+        public init(used: UInt64, allocated: UInt64, userWithinTeamSpaceAllocated: UInt64, userWithinTeamSpaceLimitType: TeamCommon.MemberSpaceLimitType) {
             comparableValidator()(used)
             self.used = used
             comparableValidator()(allocated)
             self.allocated = allocated
+            comparableValidator()(userWithinTeamSpaceAllocated)
+            self.userWithinTeamSpaceAllocated = userWithinTeamSpaceAllocated
+            self.userWithinTeamSpaceLimitType = userWithinTeamSpaceLimitType
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(TeamSpaceAllocationSerializer().serialize(self)))"
@@ -622,6 +635,8 @@ open class Users {
             let output = [ 
             "used": Serialization._UInt64Serializer.serialize(value.used),
             "allocated": Serialization._UInt64Serializer.serialize(value.allocated),
+            "user_within_team_space_allocated": Serialization._UInt64Serializer.serialize(value.userWithinTeamSpaceAllocated),
+            "user_within_team_space_limit_type": TeamCommon.MemberSpaceLimitTypeSerializer().serialize(value.userWithinTeamSpaceLimitType),
             ]
             return .dictionary(output)
         }
@@ -630,7 +645,9 @@ open class Users {
                 case .dictionary(let dict):
                     let used = Serialization._UInt64Serializer.deserialize(dict["used"] ?? .null)
                     let allocated = Serialization._UInt64Serializer.deserialize(dict["allocated"] ?? .null)
-                    return TeamSpaceAllocation(used: used, allocated: allocated)
+                    let userWithinTeamSpaceAllocated = Serialization._UInt64Serializer.deserialize(dict["user_within_team_space_allocated"] ?? .null)
+                    let userWithinTeamSpaceLimitType = TeamCommon.MemberSpaceLimitTypeSerializer().deserialize(dict["user_within_team_space_limit_type"] ?? .null)
+                    return TeamSpaceAllocation(used: used, allocated: allocated, userWithinTeamSpaceAllocated: userWithinTeamSpaceAllocated, userWithinTeamSpaceLimitType: userWithinTeamSpaceLimitType)
                 default:
                     fatalError("Type error deserializing")
             }

@@ -344,6 +344,54 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Add users to member space limits excluded users list.
+    ///
+    /// - parameter users: List of users to be added/removed.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersUpdateResult` object on
+    /// success or a `Team.ExcludedUsersUpdateError` object on failure.
+    @discardableResult open func memberSpaceLimitsExcludedUsersAdd(users: Array<Team.UserSelectorArg>? = nil) -> RpcRequest<Team.ExcludedUsersUpdateResultSerializer, Team.ExcludedUsersUpdateErrorSerializer> {
+        let route = Team.memberSpaceLimitsExcludedUsersAdd
+        let serverArgs = Team.ExcludedUsersUpdateArg(users: users)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// List member space limits excluded users.
+    ///
+    /// - parameter limit: Number of results to return per call.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersListResult` object on
+    /// success or a `Team.ExcludedUsersListError` object on failure.
+    @discardableResult open func memberSpaceLimitsExcludedUsersList(limit: UInt32 = 1000) -> RpcRequest<Team.ExcludedUsersListResultSerializer, Team.ExcludedUsersListErrorSerializer> {
+        let route = Team.memberSpaceLimitsExcludedUsersList
+        let serverArgs = Team.ExcludedUsersListArg(limit: limit)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Continue listing member space limits excluded users.
+    ///
+    /// - parameter cursor: Indicates from what point to get the next set of users.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersListResult` object on
+    /// success or a `Team.ExcludedUsersListContinueError` object on failure.
+    @discardableResult open func memberSpaceLimitsExcludedUsersListContinue(cursor: String) -> RpcRequest<Team.ExcludedUsersListResultSerializer, Team.ExcludedUsersListContinueErrorSerializer> {
+        let route = Team.memberSpaceLimitsExcludedUsersListContinue
+        let serverArgs = Team.ExcludedUsersListContinueArg(cursor: cursor)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Remove users from member space limits excluded users list.
+    ///
+    /// - parameter users: List of users to be added/removed.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersUpdateResult` object on
+    /// success or a `Team.ExcludedUsersUpdateError` object on failure.
+    @discardableResult open func memberSpaceLimitsExcludedUsersRemove(users: Array<Team.UserSelectorArg>? = nil) -> RpcRequest<Team.ExcludedUsersUpdateResultSerializer, Team.ExcludedUsersUpdateErrorSerializer> {
+        let route = Team.memberSpaceLimitsExcludedUsersRemove
+        let serverArgs = Team.ExcludedUsersUpdateArg(users: users)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Get users custom quota. Returns none as the custom quota if none was set. A maximum of 1000 members can be
     /// specified in a single call.
     ///
@@ -369,14 +417,14 @@ open class TeamRoutes {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Set users custom quota. Custom quota has to be at least 25GB. A maximum of 1000 members can be specified in a
+    /// Set users custom quota. Custom quota has to be at least 15GB. A maximum of 1000 members can be specified in a
     /// single call.
     ///
     /// - parameter usersAndQuotas: List of users and their custom quotas.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Array<Team.CustomQuotaResult>` object on
-    /// success or a `Team.CustomQuotaError` object on failure.
-    @discardableResult open func memberSpaceLimitsSetCustomQuota(usersAndQuotas: Array<Team.UserCustomQuotaArg>) -> RpcRequest<ArraySerializer<Team.CustomQuotaResultSerializer>, Team.CustomQuotaErrorSerializer> {
+    /// success or a `Team.SetCustomQuotaError` object on failure.
+    @discardableResult open func memberSpaceLimitsSetCustomQuota(usersAndQuotas: Array<Team.UserCustomQuotaArg>) -> RpcRequest<ArraySerializer<Team.CustomQuotaResultSerializer>, Team.SetCustomQuotaErrorSerializer> {
         let route = Team.memberSpaceLimitsSetCustomQuota
         let serverArgs = Team.SetCustomQuotaArg(usersAndQuotas: usersAndQuotas)
         return client.request(route, serverArgs: serverArgs)
@@ -541,12 +589,13 @@ open class TeamRoutes {
     /// - parameter newSurname: New surname for member.
     /// - parameter newPersistentId: New persistent ID. This field only available to teams using persistent ID SAML
     /// configuration.
+    /// - parameter newIsDirectoryRestricted: New value for whether the user is a directory restricted user.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfo` object on success or
     /// a `Team.MembersSetProfileError` object on failure.
-    @discardableResult open func membersSetProfile(user: Team.UserSelectorArg, newEmail: String? = nil, newExternalId: String? = nil, newGivenName: String? = nil, newSurname: String? = nil, newPersistentId: String? = nil) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersSetProfileErrorSerializer> {
+    @discardableResult open func membersSetProfile(user: Team.UserSelectorArg, newEmail: String? = nil, newExternalId: String? = nil, newGivenName: String? = nil, newSurname: String? = nil, newPersistentId: String? = nil, newIsDirectoryRestricted: Bool? = nil) -> RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersSetProfileErrorSerializer> {
         let route = Team.membersSetProfile
-        let serverArgs = Team.MembersSetProfileArg(user: user, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname, newPersistentId: newPersistentId)
+        let serverArgs = Team.MembersSetProfileArg(user: user, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname, newPersistentId: newPersistentId, newIsDirectoryRestricted: newIsDirectoryRestricted)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -752,12 +801,14 @@ open class TeamRoutes {
     /// Creates a new, active, team folder with no members. Permission : Team member file access.
     ///
     /// - parameter name: Name for the new team folder.
+    /// - parameter syncSetting: The sync setting to apply to this team folder. Only permitted if the team has team
+    /// selective sync enabled.
     ///
     ///  - returns: Through the response callback, the caller will receive a `Team.TeamFolderMetadata` object on success
     /// or a `Team.TeamFolderCreateError` object on failure.
-    @discardableResult open func teamFolderCreate(name: String) -> RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderCreateErrorSerializer> {
+    @discardableResult open func teamFolderCreate(name: String, syncSetting: Files.SyncSettingArg? = nil) -> RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderCreateErrorSerializer> {
         let route = Team.teamFolderCreate
-        let serverArgs = Team.TeamFolderCreateArg(name: name)
+        let serverArgs = Team.TeamFolderCreateArg(name: name, syncSetting: syncSetting)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -819,6 +870,21 @@ open class TeamRoutes {
     @discardableResult open func teamFolderRename(teamFolderId: String, name: String) -> RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderRenameErrorSerializer> {
         let route = Team.teamFolderRename
         let serverArgs = Team.TeamFolderRenameArg(teamFolderId: teamFolderId, name: name)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Updates the sync settings on a team folder or its contents.  Use of this endpoint requires that the team has
+    /// team selective sync enabled.
+    ///
+    /// - parameter syncSetting: Sync setting to apply to the team folder itself. Only meaningful if the team folder is
+    /// not a shared team root.
+    /// - parameter contentSyncSettings: Sync settings to apply to contents of this team folder.
+    ///
+    ///  - returns: Through the response callback, the caller will receive a `Team.TeamFolderMetadata` object on success
+    /// or a `Team.TeamFolderUpdateSyncSettingsError` object on failure.
+    @discardableResult open func teamFolderUpdateSyncSettings(teamFolderId: String, syncSetting: Files.SyncSettingArg? = nil, contentSyncSettings: Array<Files.ContentSyncSettingArg>? = nil) -> RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderUpdateSyncSettingsErrorSerializer> {
+        let route = Team.teamFolderUpdateSyncSettings
+        let serverArgs = Team.TeamFolderUpdateSyncSettingsArg(teamFolderId: teamFolderId, syncSetting: syncSetting, contentSyncSettings: contentSyncSettings)
         return client.request(route, serverArgs: serverArgs)
     }
 

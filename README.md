@@ -12,12 +12,11 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
   * [Swift 3 Keychain bug](#swift-3-keychain-bug)
 * [Get started](#get-started)
   * [Register your application](#register-your-application)
-  * [Obtain an OAuth 2.0 token](#obtain-an-OAuth 2.0-token)
+  * [Obtain an OAuth 2.0 token](#obtain-an-oauth-20-token)
 * [SDK distribution](#sdk-distribution)
   * [CocoaPods](#cocoapods)
   * [Carthage](#carthage)
   * [Manually add subproject](#manually-add-subproject)
-  * [Swift 2.3](#swift-23)
 * [Configure your project](#configure-your-project)
   * [Application `.plist` file](#application-plist-file)
   * [Handling the authorization flow](#handling-the-authorization-flow)
@@ -77,7 +76,7 @@ All requests need to be made with an OAuth 2.0 access token. An OAuth token repr
 a Dropbox user account or team.
 
 Once you've created an app, you can go to the App Console and manually generate an access token to authorize your app to access your own Dropbox account.
-Otherwise, you can obtain an OAuth token programmatically using the SDK's pre-defined auth flow. For more information, [see below](https://github.com/dropbox/SwiftyDropbox#handling-authorization-flow).
+Otherwise, you can obtain an OAuth token programmatically using the SDK's pre-defined auth flow. For more information, [see below](https://github.com/dropbox/SwiftyDropbox#handling-the-authorization-flow).
 
 ---
 
@@ -132,7 +131,7 @@ To install the Dropbox Swift SDK via Carthage, you need to create a `Cartfile` i
 
 ```
 # SwiftyDropbox
-github "https://github.com/dropbox/SwiftyDropbox" ~> 4.2.1
+github "https://github.com/dropbox/SwiftyDropbox" ~> 4.6.0
 ```
 
 Then, run the following command to install the dependency to checkout and build the Dropbox Swift SDK repository:

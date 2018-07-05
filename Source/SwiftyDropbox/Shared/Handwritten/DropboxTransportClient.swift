@@ -11,14 +11,15 @@ open class DropboxTransportClient {
     open let longpollManager: SessionManager
     open var accessToken: String
     open var selectUser: String?
+    open var pathRoot: Common.PathRoot?
     var baseHosts: [String: String]
     var userAgent: String
 
-    public convenience init(accessToken: String, selectUser: String? = nil) {
-        self.init(accessToken: accessToken, baseHosts: nil, userAgent: nil, selectUser: selectUser)
+    public convenience init(accessToken: String, selectUser: String? = nil, pathRoot: Common.PathRoot? = nil) {
+        self.init(accessToken: accessToken, baseHosts: nil, userAgent: nil, selectUser: selectUser, pathRoot: pathRoot)
     }
 
-    public init(accessToken: String, baseHosts: [String: String]?, userAgent: String?, selectUser: String?, sessionDelegate: SessionDelegate? = nil, backgroundSessionDelegate: SessionDelegate? = nil, serverTrustPolicyManager: ServerTrustPolicyManager? = nil, sharedContainerIdentifier: String? = nil) {
+    public init(accessToken: String, baseHosts: [String: String]?, userAgent: String?, selectUser: String?, sessionDelegate: SessionDelegate? = nil, backgroundSessionDelegate: SessionDelegate? = nil, longpollSessionDelegate: SessionDelegate? = nil, serverTrustPolicyManager: ServerTrustPolicyManager? = nil, sharedContainerIdentifier: String? = nil, pathRoot: Common.PathRoot? = nil) {
         let config = URLSessionConfiguration.default
         let delegate = sessionDelegate ?? SessionDelegate()
         let serverTrustPolicyManager = serverTrustPolicyManager ?? nil
@@ -41,7 +42,9 @@ open class DropboxTransportClient {
         let longpollConfig = URLSessionConfiguration.default
         longpollConfig.timeoutIntervalForRequest = 480.0
 
-        let longpollManager = SessionManager(configuration: longpollConfig, delegate: delegate, serverTrustPolicyManager: serverTrustPolicyManager)
+        let longpollSessionDelegate = longpollSessionDelegate ?? SessionDelegate()
+
+        let longpollManager = SessionManager(configuration: longpollConfig, delegate: longpollSessionDelegate, serverTrustPolicyManager: serverTrustPolicyManager)
 
         let defaultBaseHosts = [
             "api": "https://api.dropbox.com/2",
@@ -56,6 +59,7 @@ open class DropboxTransportClient {
         self.longpollManager = longpollManager
         self.accessToken = accessToken
         self.selectUser = selectUser
+        self.pathRoot = pathRoot;
         self.baseHosts = baseHosts ?? defaultBaseHosts
         if let userAgent = userAgent {
             let customUserAgent = "\(userAgent)/\(defaultUserAgent)"
@@ -223,6 +227,11 @@ open class DropboxTransportClient {
             headers["Authorization"] = "Bearer \(self.accessToken)"
             if let selectUser = self.selectUser {
                 headers["Dropbox-Api-Select-User"] = selectUser
+            }
+
+            if let pathRoot = self.pathRoot {
+                let obj = Common.PathRootSerializer().serialize(pathRoot)
+                headers["Dropbox-Api-Path-Root"] = utf8Decode(SerializeUtil.dumpJSON(obj)!)
             }
         }
 

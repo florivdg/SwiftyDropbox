@@ -20,12 +20,16 @@ open class Files {
         /// If true, the results will include a flag for each file indicating whether or not  that file has any explicit
         /// members.
         open let includeHasExplicitSharedMembers: Bool
-        public init(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false) {
+        /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set if there exists property data
+        /// associated with the file and each of the listed templates.
+        open let includePropertyGroups: FileProperties.TemplateFilterBase?
+        public init(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyGroups: FileProperties.TemplateFilterBase? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.includeMediaInfo = includeMediaInfo
             self.includeDeleted = includeDeleted
             self.includeHasExplicitSharedMembers = includeHasExplicitSharedMembers
+            self.includePropertyGroups = includePropertyGroups
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(GetMetadataArgSerializer().serialize(self)))"
@@ -39,6 +43,7 @@ open class Files {
             "include_media_info": Serialization._BoolSerializer.serialize(value.includeMediaInfo),
             "include_deleted": Serialization._BoolSerializer.serialize(value.includeDeleted),
             "include_has_explicit_shared_members": Serialization._BoolSerializer.serialize(value.includeHasExplicitSharedMembers),
+            "include_property_groups": NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).serialize(value.includePropertyGroups),
             ]
             return .dictionary(output)
         }
@@ -49,7 +54,8 @@ open class Files {
                     let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .number(0))
                     let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .number(0))
                     let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
-                    return GetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers)
+                    let includePropertyGroups = NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).deserialize(dict["include_property_groups"] ?? .null)
+                    return GetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includePropertyGroups: includePropertyGroups)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -61,10 +67,10 @@ open class Files {
         /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set for files with custom
         /// properties.
         open let includePropertyTemplates: Array<String>?
-        public init(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyTemplates: Array<String>? = nil) {
+        public init(path: String, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includePropertyGroups: FileProperties.TemplateFilterBase? = nil, includePropertyTemplates: Array<String>? = nil) {
             nullableValidator(arrayValidator(itemValidator: stringValidator(minLength: 1, pattern: "(/|ptid:).*")))(includePropertyTemplates)
             self.includePropertyTemplates = includePropertyTemplates
-            super.init(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers)
+            super.init(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includePropertyGroups: includePropertyGroups)
         }
         open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(AlphaGetMetadataArgSerializer().serialize(self)))"
@@ -78,6 +84,7 @@ open class Files {
             "include_media_info": Serialization._BoolSerializer.serialize(value.includeMediaInfo),
             "include_deleted": Serialization._BoolSerializer.serialize(value.includeDeleted),
             "include_has_explicit_shared_members": Serialization._BoolSerializer.serialize(value.includeHasExplicitSharedMembers),
+            "include_property_groups": NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).serialize(value.includePropertyGroups),
             "include_property_templates": NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.includePropertyTemplates),
             ]
             return .dictionary(output)
@@ -89,8 +96,9 @@ open class Files {
                     let includeMediaInfo = Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .number(0))
                     let includeDeleted = Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .number(0))
                     let includeHasExplicitSharedMembers = Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
+                    let includePropertyGroups = NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).deserialize(dict["include_property_groups"] ?? .null)
                     let includePropertyTemplates = NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["include_property_templates"] ?? .null)
-                    return AlphaGetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includePropertyTemplates: includePropertyTemplates)
+                    return AlphaGetMetadataArg(path: path, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includePropertyGroups: includePropertyGroups, includePropertyTemplates: includePropertyTemplates)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -195,13 +203,16 @@ open class Files {
         /// client software. If true, this tells the clients that this modification shouldn't result in a user
         /// notification.
         open let mute: Bool
-        public init(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false) {
+        /// List of custom properties to add to file.
+        open let propertyGroups: Array<FileProperties.PropertyGroup>?
+        public init(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(path)
             self.path = path
             self.mode = mode
             self.autorename = autorename
             self.clientModified = clientModified
             self.mute = mute
+            self.propertyGroups = propertyGroups
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(CommitInfoSerializer().serialize(self)))"
@@ -216,6 +227,7 @@ open class Files {
             "autorename": Serialization._BoolSerializer.serialize(value.autorename),
             "client_modified": NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.clientModified),
             "mute": Serialization._BoolSerializer.serialize(value.mute),
+            "property_groups": NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).serialize(value.propertyGroups),
             ]
             return .dictionary(output)
         }
@@ -227,7 +239,8 @@ open class Files {
                     let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .number(0))
                     let clientModified = NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .null)
                     let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .number(0))
-                    return CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
+                    let propertyGroups = NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .null)
+                    return CommitInfo(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -236,12 +249,6 @@ open class Files {
 
     /// The CommitInfoWithProperties struct
     open class CommitInfoWithProperties: Files.CommitInfo {
-        /// List of custom properties to add to file.
-        open let propertyGroups: Array<FileProperties.PropertyGroup>?
-        public init(path: String, mode: Files.WriteMode = .add, autorename: Bool = false, clientModified: Date? = nil, mute: Bool = false, propertyGroups: Array<FileProperties.PropertyGroup>? = nil) {
-            self.propertyGroups = propertyGroups
-            super.init(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute)
-        }
         open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(CommitInfoWithPropertiesSerializer().serialize(self)))"
         }
@@ -269,6 +276,78 @@ open class Files {
                     let mute = Serialization._BoolSerializer.deserialize(dict["mute"] ?? .number(0))
                     let propertyGroups = NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .null)
                     return CommitInfoWithProperties(path: path, mode: mode, autorename: autorename, clientModified: clientModified, mute: mute, propertyGroups: propertyGroups)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The ContentSyncSetting struct
+    open class ContentSyncSetting: CustomStringConvertible {
+        /// Id of the item this setting is applied to.
+        open let id: String
+        /// Setting for this item.
+        open let syncSetting: Files.SyncSetting
+        public init(id: String, syncSetting: Files.SyncSetting) {
+            stringValidator(minLength: 4, pattern: "id:.+")(id)
+            self.id = id
+            self.syncSetting = syncSetting
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ContentSyncSettingSerializer().serialize(self)))"
+        }
+    }
+    open class ContentSyncSettingSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ContentSyncSetting) -> JSON {
+            let output = [ 
+            "id": Serialization._StringSerializer.serialize(value.id),
+            "sync_setting": Files.SyncSettingSerializer().serialize(value.syncSetting),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ContentSyncSetting {
+            switch json {
+                case .dictionary(let dict):
+                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
+                    let syncSetting = Files.SyncSettingSerializer().deserialize(dict["sync_setting"] ?? .null)
+                    return ContentSyncSetting(id: id, syncSetting: syncSetting)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The ContentSyncSettingArg struct
+    open class ContentSyncSettingArg: CustomStringConvertible {
+        /// Id of the item this setting is applied to.
+        open let id: String
+        /// Setting for this item.
+        open let syncSetting: Files.SyncSettingArg
+        public init(id: String, syncSetting: Files.SyncSettingArg) {
+            stringValidator(minLength: 4, pattern: "id:.+")(id)
+            self.id = id
+            self.syncSetting = syncSetting
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ContentSyncSettingArgSerializer().serialize(self)))"
+        }
+    }
+    open class ContentSyncSettingArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ContentSyncSettingArg) -> JSON {
+            let output = [ 
+            "id": Serialization._StringSerializer.serialize(value.id),
+            "sync_setting": Files.SyncSettingArgSerializer().serialize(value.syncSetting),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> ContentSyncSettingArg {
+            switch json {
+                case .dictionary(let dict):
+                    let id = Serialization._StringSerializer.deserialize(dict["id"] ?? .null)
+                    let syncSetting = Files.SyncSettingArgSerializer().deserialize(dict["sync_setting"] ?? .null)
+                    return ContentSyncSettingArg(id: id, syncSetting: syncSetting)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -311,6 +390,380 @@ open class Files {
         }
     }
 
+    /// The CreateFolderBatchArg struct
+    open class CreateFolderBatchArg: CustomStringConvertible {
+        /// List of paths to be created in the user's Dropbox. Duplicate path arguments in the batch are considered only
+        /// once.
+        open let paths: Array<String>
+        /// If there's a conflict, have the Dropbox server try to autorename the folder to avoid the conflict.
+        open let autorename: Bool
+        /// Whether to force the create to happen asynchronously.
+        open let forceAsync: Bool
+        public init(paths: Array<String>, autorename: Bool = false, forceAsync: Bool = false) {
+            arrayValidator(itemValidator: stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)"))(paths)
+            self.paths = paths
+            self.autorename = autorename
+            self.forceAsync = forceAsync
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(CreateFolderBatchArgSerializer().serialize(self)))"
+        }
+    }
+    open class CreateFolderBatchArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: CreateFolderBatchArg) -> JSON {
+            let output = [ 
+            "paths": ArraySerializer(Serialization._StringSerializer).serialize(value.paths),
+            "autorename": Serialization._BoolSerializer.serialize(value.autorename),
+            "force_async": Serialization._BoolSerializer.serialize(value.forceAsync),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> CreateFolderBatchArg {
+            switch json {
+                case .dictionary(let dict):
+                    let paths = ArraySerializer(Serialization._StringSerializer).deserialize(dict["paths"] ?? .null)
+                    let autorename = Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .number(0))
+                    let forceAsync = Serialization._BoolSerializer.deserialize(dict["force_async"] ?? .number(0))
+                    return CreateFolderBatchArg(paths: paths, autorename: autorename, forceAsync: forceAsync)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The CreateFolderBatchError union
+    public enum CreateFolderBatchError: CustomStringConvertible {
+        /// The operation would involve too many files or folders.
+        case tooManyFiles
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(CreateFolderBatchErrorSerializer().serialize(self)))"
+        }
+    }
+    open class CreateFolderBatchErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: CreateFolderBatchError) -> JSON {
+            switch value {
+                case .tooManyFiles:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_many_files")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> CreateFolderBatchError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "too_many_files":
+                            return CreateFolderBatchError.tooManyFiles
+                        case "other":
+                            return CreateFolderBatchError.other
+                        default:
+                            return CreateFolderBatchError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The CreateFolderBatchJobStatus union
+    public enum CreateFolderBatchJobStatus: CustomStringConvertible {
+        /// The asynchronous job is still in progress.
+        case inProgress
+        /// The batch create folder has finished.
+        case complete(Files.CreateFolderBatchResult)
+        /// The batch create folder has failed.
+        case failed(Files.CreateFolderBatchError)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(CreateFolderBatchJobStatusSerializer().serialize(self)))"
+        }
+    }
+    open class CreateFolderBatchJobStatusSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: CreateFolderBatchJobStatus) -> JSON {
+            switch value {
+                case .inProgress:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("in_progress")
+                    return .dictionary(d)
+                case .complete(let arg):
+                    var d = Serialization.getFields(Files.CreateFolderBatchResultSerializer().serialize(arg))
+                    d[".tag"] = .str("complete")
+                    return .dictionary(d)
+                case .failed(let arg):
+                    var d = ["failed": Files.CreateFolderBatchErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("failed")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> CreateFolderBatchJobStatus {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "in_progress":
+                            return CreateFolderBatchJobStatus.inProgress
+                        case "complete":
+                            let v = Files.CreateFolderBatchResultSerializer().deserialize(json)
+                            return CreateFolderBatchJobStatus.complete(v)
+                        case "failed":
+                            let v = Files.CreateFolderBatchErrorSerializer().deserialize(d["failed"] ?? .null)
+                            return CreateFolderBatchJobStatus.failed(v)
+                        case "other":
+                            return CreateFolderBatchJobStatus.other
+                        default:
+                            return CreateFolderBatchJobStatus.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// Result returned by createFolderBatch that may either launch an asynchronous job or complete synchronously.
+    public enum CreateFolderBatchLaunch: CustomStringConvertible {
+        /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
+        /// the status of the asynchronous job.
+        case asyncJobId(String)
+        /// An unspecified error.
+        case complete(Files.CreateFolderBatchResult)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(CreateFolderBatchLaunchSerializer().serialize(self)))"
+        }
+    }
+    open class CreateFolderBatchLaunchSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: CreateFolderBatchLaunch) -> JSON {
+            switch value {
+                case .asyncJobId(let arg):
+                    var d = ["async_job_id": Serialization._StringSerializer.serialize(arg)]
+                    d[".tag"] = .str("async_job_id")
+                    return .dictionary(d)
+                case .complete(let arg):
+                    var d = Serialization.getFields(Files.CreateFolderBatchResultSerializer().serialize(arg))
+                    d[".tag"] = .str("complete")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> CreateFolderBatchLaunch {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "async_job_id":
+                            let v = Serialization._StringSerializer.deserialize(d["async_job_id"] ?? .null)
+                            return CreateFolderBatchLaunch.asyncJobId(v)
+                        case "complete":
+                            let v = Files.CreateFolderBatchResultSerializer().deserialize(json)
+                            return CreateFolderBatchLaunch.complete(v)
+                        case "other":
+                            return CreateFolderBatchLaunch.other
+                        default:
+                            return CreateFolderBatchLaunch.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The FileOpsResult struct
+    open class FileOpsResult: CustomStringConvertible {
+        public init() {
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(FileOpsResultSerializer().serialize(self)))"
+        }
+    }
+    open class FileOpsResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: FileOpsResult) -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> FileOpsResult {
+            switch json {
+                case .dictionary(_):
+                    return FileOpsResult()
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The CreateFolderBatchResult struct
+    open class CreateFolderBatchResult: Files.FileOpsResult {
+        /// (no description)
+        open let entries: Array<Files.CreateFolderBatchResultEntry>
+        public init(entries: Array<Files.CreateFolderBatchResultEntry>) {
+            self.entries = entries
+            super.init()
+        }
+        open override var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(CreateFolderBatchResultSerializer().serialize(self)))"
+        }
+    }
+    open class CreateFolderBatchResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: CreateFolderBatchResult) -> JSON {
+            let output = [ 
+            "entries": ArraySerializer(Files.CreateFolderBatchResultEntrySerializer()).serialize(value.entries),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> CreateFolderBatchResult {
+            switch json {
+                case .dictionary(let dict):
+                    let entries = ArraySerializer(Files.CreateFolderBatchResultEntrySerializer()).deserialize(dict["entries"] ?? .null)
+                    return CreateFolderBatchResult(entries: entries)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The CreateFolderBatchResultEntry union
+    public enum CreateFolderBatchResultEntry: CustomStringConvertible {
+        /// An unspecified error.
+        case success(Files.CreateFolderEntryResult)
+        /// An unspecified error.
+        case failure(Files.CreateFolderEntryError)
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(CreateFolderBatchResultEntrySerializer().serialize(self)))"
+        }
+    }
+    open class CreateFolderBatchResultEntrySerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: CreateFolderBatchResultEntry) -> JSON {
+            switch value {
+                case .success(let arg):
+                    var d = Serialization.getFields(Files.CreateFolderEntryResultSerializer().serialize(arg))
+                    d[".tag"] = .str("success")
+                    return .dictionary(d)
+                case .failure(let arg):
+                    var d = ["failure": Files.CreateFolderEntryErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("failure")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> CreateFolderBatchResultEntry {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "success":
+                            let v = Files.CreateFolderEntryResultSerializer().deserialize(json)
+                            return CreateFolderBatchResultEntry.success(v)
+                        case "failure":
+                            let v = Files.CreateFolderEntryErrorSerializer().deserialize(d["failure"] ?? .null)
+                            return CreateFolderBatchResultEntry.failure(v)
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The CreateFolderEntryError union
+    public enum CreateFolderEntryError: CustomStringConvertible {
+        /// An unspecified error.
+        case path(Files.WriteError)
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(CreateFolderEntryErrorSerializer().serialize(self)))"
+        }
+    }
+    open class CreateFolderEntryErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: CreateFolderEntryError) -> JSON {
+            switch value {
+                case .path(let arg):
+                    var d = ["path": Files.WriteErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> CreateFolderEntryError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "path":
+                            let v = Files.WriteErrorSerializer().deserialize(d["path"] ?? .null)
+                            return CreateFolderEntryError.path(v)
+                        case "other":
+                            return CreateFolderEntryError.other
+                        default:
+                            return CreateFolderEntryError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The CreateFolderEntryResult struct
+    open class CreateFolderEntryResult: CustomStringConvertible {
+        /// Metadata of the created folder.
+        open let metadata: Files.FolderMetadata
+        public init(metadata: Files.FolderMetadata) {
+            self.metadata = metadata
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(CreateFolderEntryResultSerializer().serialize(self)))"
+        }
+    }
+    open class CreateFolderEntryResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: CreateFolderEntryResult) -> JSON {
+            let output = [ 
+            "metadata": Files.FolderMetadataSerializer().serialize(value.metadata),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> CreateFolderEntryResult {
+            switch json {
+                case .dictionary(let dict):
+                    let metadata = Files.FolderMetadataSerializer().deserialize(dict["metadata"] ?? .null)
+                    return CreateFolderEntryResult(metadata: metadata)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The CreateFolderError union
     public enum CreateFolderError: CustomStringConvertible {
         /// An unspecified error.
@@ -343,30 +796,6 @@ open class Files {
                     }
                 default:
                     fatalError("Failed to deserialize")
-            }
-        }
-    }
-
-    /// The FileOpsResult struct
-    open class FileOpsResult: CustomStringConvertible {
-        public init() {
-        }
-        open var description: String {
-            return "\(SerializeUtil.prepareJSONForSerialization(FileOpsResultSerializer().serialize(self)))"
-        }
-    }
-    open class FileOpsResultSerializer: JSONSerializer {
-        public init() { }
-        open func serialize(_ value: FileOpsResult) -> JSON {
-            let output = [String: JSON]()
-            return .dictionary(output)
-        }
-        open func deserialize(_ json: JSON) -> FileOpsResult {
-            switch json {
-                case .dictionary(_):
-                    return FileOpsResult()
-                default:
-                    fatalError("Type error deserializing")
             }
         }
     }
@@ -406,9 +835,14 @@ open class Files {
     open class DeleteArg: CustomStringConvertible {
         /// Path in the user's Dropbox to delete.
         open let path: String
-        public init(path: String) {
+        /// Perform delete if given "rev" matches the existing file's latest "rev". This field does not support deleting
+        /// a folder.
+        open let parentRev: String?
+        public init(path: String, parentRev: String? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(path)
             self.path = path
+            nullableValidator(stringValidator(minLength: 9, pattern: "[0-9a-f]+"))(parentRev)
+            self.parentRev = parentRev
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(DeleteArgSerializer().serialize(self)))"
@@ -419,6 +853,7 @@ open class Files {
         open func serialize(_ value: DeleteArg) -> JSON {
             let output = [ 
             "path": Serialization._StringSerializer.serialize(value.path),
+            "parent_rev": NullableSerializer(Serialization._StringSerializer).serialize(value.parentRev),
             ]
             return .dictionary(output)
         }
@@ -426,7 +861,8 @@ open class Files {
             switch json {
                 case .dictionary(let dict):
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
-                    return DeleteArg(path: path)
+                    let parentRev = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_rev"] ?? .null)
+                    return DeleteArg(path: path, parentRev: parentRev)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1054,6 +1490,127 @@ open class Files {
         }
     }
 
+    /// The DownloadZipArg struct
+    open class DownloadZipArg: CustomStringConvertible {
+        /// The path of the folder to download.
+        open let path: String
+        public init(path: String) {
+            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
+            self.path = path
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DownloadZipArgSerializer().serialize(self)))"
+        }
+    }
+    open class DownloadZipArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DownloadZipArg) -> JSON {
+            let output = [ 
+            "path": Serialization._StringSerializer.serialize(value.path),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DownloadZipArg {
+            switch json {
+                case .dictionary(let dict):
+                    let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
+                    return DownloadZipArg(path: path)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The DownloadZipError union
+    public enum DownloadZipError: CustomStringConvertible {
+        /// An unspecified error.
+        case path(Files.LookupError)
+        /// The folder is too large to download.
+        case tooLarge
+        /// The folder has too many files to download.
+        case tooManyFiles
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DownloadZipErrorSerializer().serialize(self)))"
+        }
+    }
+    open class DownloadZipErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DownloadZipError) -> JSON {
+            switch value {
+                case .path(let arg):
+                    var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .tooLarge:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_large")
+                    return .dictionary(d)
+                case .tooManyFiles:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_many_files")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> DownloadZipError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "path":
+                            let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .null)
+                            return DownloadZipError.path(v)
+                        case "too_large":
+                            return DownloadZipError.tooLarge
+                        case "too_many_files":
+                            return DownloadZipError.tooManyFiles
+                        case "other":
+                            return DownloadZipError.other
+                        default:
+                            return DownloadZipError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The DownloadZipResult struct
+    open class DownloadZipResult: CustomStringConvertible {
+        /// (no description)
+        open let metadata: Files.FolderMetadata
+        public init(metadata: Files.FolderMetadata) {
+            self.metadata = metadata
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(DownloadZipResultSerializer().serialize(self)))"
+        }
+    }
+    open class DownloadZipResultSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: DownloadZipResult) -> JSON {
+            let output = [ 
+            "metadata": Files.FolderMetadataSerializer().serialize(value.metadata),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> DownloadZipResult {
+            switch json {
+                case .dictionary(let dict):
+                    let metadata = Files.FolderMetadataSerializer().deserialize(dict["metadata"] ?? .null)
+                    return DownloadZipResult(metadata: metadata)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
     /// The FileMetadata struct
     open class FileMetadata: Files.Metadata {
         /// A unique identifier for the file.
@@ -1072,6 +1629,8 @@ open class Files {
         open let size: UInt64
         /// Additional information if the file is a photo or video.
         open let mediaInfo: Files.MediaInfo?
+        /// Set if this file is a symlink.
+        open let symlinkInfo: Files.SymlinkInfo?
         /// Set if this file is contained in a shared folder.
         open let sharingInfo: Files.FileSharingInfo?
         /// Additional information if the file has custom properties with the property template specified.
@@ -1084,7 +1643,7 @@ open class Files {
         /// A hash of the file content. This field can be used to verify data integrity. For more information see our
         /// Content hash /developers/reference/content-hash page.
         open let contentHash: String?
-        public init(name: String, id: String, clientModified: Date, serverModified: Date, rev: String, size: UInt64, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, mediaInfo: Files.MediaInfo? = nil, sharingInfo: Files.FileSharingInfo? = nil, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, hasExplicitSharedMembers: Bool? = nil, contentHash: String? = nil) {
+        public init(name: String, id: String, clientModified: Date, serverModified: Date, rev: String, size: UInt64, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, mediaInfo: Files.MediaInfo? = nil, symlinkInfo: Files.SymlinkInfo? = nil, sharingInfo: Files.FileSharingInfo? = nil, propertyGroups: Array<FileProperties.PropertyGroup>? = nil, hasExplicitSharedMembers: Bool? = nil, contentHash: String? = nil) {
             stringValidator(minLength: 1)(id)
             self.id = id
             self.clientModified = clientModified
@@ -1094,6 +1653,7 @@ open class Files {
             comparableValidator()(size)
             self.size = size
             self.mediaInfo = mediaInfo
+            self.symlinkInfo = symlinkInfo
             self.sharingInfo = sharingInfo
             self.propertyGroups = propertyGroups
             self.hasExplicitSharedMembers = hasExplicitSharedMembers
@@ -1119,6 +1679,7 @@ open class Files {
             "path_display": NullableSerializer(Serialization._StringSerializer).serialize(value.pathDisplay),
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
             "media_info": NullableSerializer(Files.MediaInfoSerializer()).serialize(value.mediaInfo),
+            "symlink_info": NullableSerializer(Files.SymlinkInfoSerializer()).serialize(value.symlinkInfo),
             "sharing_info": NullableSerializer(Files.FileSharingInfoSerializer()).serialize(value.sharingInfo),
             "property_groups": NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).serialize(value.propertyGroups),
             "has_explicit_shared_members": NullableSerializer(Serialization._BoolSerializer).serialize(value.hasExplicitSharedMembers),
@@ -1139,11 +1700,12 @@ open class Files {
                     let pathDisplay = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_display"] ?? .null)
                     let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .null)
                     let mediaInfo = NullableSerializer(Files.MediaInfoSerializer()).deserialize(dict["media_info"] ?? .null)
+                    let symlinkInfo = NullableSerializer(Files.SymlinkInfoSerializer()).deserialize(dict["symlink_info"] ?? .null)
                     let sharingInfo = NullableSerializer(Files.FileSharingInfoSerializer()).deserialize(dict["sharing_info"] ?? .null)
                     let propertyGroups = NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).deserialize(dict["property_groups"] ?? .null)
                     let hasExplicitSharedMembers = NullableSerializer(Serialization._BoolSerializer).deserialize(dict["has_explicit_shared_members"] ?? .null)
                     let contentHash = NullableSerializer(Serialization._StringSerializer).deserialize(dict["content_hash"] ?? .null)
-                    return FileMetadata(name: name, id: id, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId, mediaInfo: mediaInfo, sharingInfo: sharingInfo, propertyGroups: propertyGroups, hasExplicitSharedMembers: hasExplicitSharedMembers, contentHash: contentHash)
+                    return FileMetadata(name: name, id: id, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId, mediaInfo: mediaInfo, symlinkInfo: symlinkInfo, sharingInfo: sharingInfo, propertyGroups: propertyGroups, hasExplicitSharedMembers: hasExplicitSharedMembers, contentHash: contentHash)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -1228,7 +1790,8 @@ open class Files {
         open let sharedFolderId: String?
         /// Set if the folder is contained in a shared folder or is a shared folder mount point.
         open let sharingInfo: Files.FolderSharingInfo?
-        /// Additional information if the file has custom properties with the property template specified.
+        /// Additional information if the file has custom properties with the property template specified. Note that
+        /// only properties associated with user-owned templates, not team-owned templates, can be attached to folders.
         open let propertyGroups: Array<FileProperties.PropertyGroup>?
         public init(name: String, id: String, pathLower: String? = nil, pathDisplay: String? = nil, parentSharedFolderId: String? = nil, sharedFolderId: String? = nil, sharingInfo: Files.FolderSharingInfo? = nil, propertyGroups: Array<FileProperties.PropertyGroup>? = nil) {
             stringValidator(minLength: 1)(id)
@@ -1809,7 +2372,10 @@ open class Files {
         /// this field is present, path in ListFolderArg will be relative to root of the shared link. Only non-recursive
         /// mode is supported for shared link.
         open let sharedLink: Files.SharedLink?
-        public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil) {
+        /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set if there exists property data
+        /// associated with the file and each of the listed templates.
+        open let includePropertyGroups: FileProperties.TemplateFilterBase?
+        public init(path: String, recursive: Bool = false, includeMediaInfo: Bool = false, includeDeleted: Bool = false, includeHasExplicitSharedMembers: Bool = false, includeMountedFolders: Bool = true, limit: UInt32? = nil, sharedLink: Files.SharedLink? = nil, includePropertyGroups: FileProperties.TemplateFilterBase? = nil) {
             stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.recursive = recursive
@@ -1820,6 +2386,7 @@ open class Files {
             nullableValidator(comparableValidator(minValue: 1, maxValue: 2000))(limit)
             self.limit = limit
             self.sharedLink = sharedLink
+            self.includePropertyGroups = includePropertyGroups
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ListFolderArgSerializer().serialize(self)))"
@@ -1837,6 +2404,7 @@ open class Files {
             "include_mounted_folders": Serialization._BoolSerializer.serialize(value.includeMountedFolders),
             "limit": NullableSerializer(Serialization._UInt32Serializer).serialize(value.limit),
             "shared_link": NullableSerializer(Files.SharedLinkSerializer()).serialize(value.sharedLink),
+            "include_property_groups": NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).serialize(value.includePropertyGroups),
             ]
             return .dictionary(output)
         }
@@ -1851,7 +2419,8 @@ open class Files {
                     let includeMountedFolders = Serialization._BoolSerializer.deserialize(dict["include_mounted_folders"] ?? .number(1))
                     let limit = NullableSerializer(Serialization._UInt32Serializer).deserialize(dict["limit"] ?? .null)
                     let sharedLink = NullableSerializer(Files.SharedLinkSerializer()).deserialize(dict["shared_link"] ?? .null)
-                    return ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink)
+                    let includePropertyGroups = NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).deserialize(dict["include_property_groups"] ?? .null)
+                    return ListFolderArg(path: path, recursive: recursive, includeMediaInfo: includeMediaInfo, includeDeleted: includeDeleted, includeHasExplicitSharedMembers: includeHasExplicitSharedMembers, includeMountedFolders: includeMountedFolders, limit: limit, sharedLink: sharedLink, includePropertyGroups: includePropertyGroups)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -2813,6 +3382,8 @@ open class Files {
         /// Your move operation would result in an ownership transfer. You may reissue the request with the field
         /// allowOwnershipTransfer in RelocationArg to true.
         case cantTransferOwnership
+        /// The current user does not have enough space to move or copy the files.
+        case insufficientQuota
         /// An unspecified error.
         case other
 
@@ -2860,6 +3431,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("cant_transfer_ownership")
                     return .dictionary(d)
+                case .insufficientQuota:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_quota")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -2892,6 +3467,8 @@ open class Files {
                             return RelocationError.duplicatedOrNestedPaths
                         case "cant_transfer_ownership":
                             return RelocationError.cantTransferOwnership
+                        case "insufficient_quota":
+                            return RelocationError.insufficientQuota
                         case "other":
                             return RelocationError.other
                         default:
@@ -2924,6 +3501,8 @@ open class Files {
         /// Your move operation would result in an ownership transfer. You may reissue the request with the field
         /// allowOwnershipTransfer in RelocationArg to true.
         case cantTransferOwnership
+        /// The current user does not have enough space to move or copy the files.
+        case insufficientQuota
         /// An unspecified error.
         case other
         /// There are too many write operations in user's Dropbox. Please retry this request.
@@ -2973,6 +3552,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("cant_transfer_ownership")
                     return .dictionary(d)
+                case .insufficientQuota:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("insufficient_quota")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -3009,6 +3592,8 @@ open class Files {
                             return RelocationBatchError.duplicatedOrNestedPaths
                         case "cant_transfer_ownership":
                             return RelocationBatchError.cantTransferOwnership
+                        case "insufficient_quota":
+                            return RelocationBatchError.insufficientQuota
                         case "other":
                             return RelocationBatchError.other
                         case "too_many_write_operations":
@@ -3984,6 +4569,210 @@ open class Files {
         }
     }
 
+    /// The SymlinkInfo struct
+    open class SymlinkInfo: CustomStringConvertible {
+        /// The target this symlink points to.
+        open let target: String
+        public init(target: String) {
+            stringValidator()(target)
+            self.target = target
+        }
+        open var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SymlinkInfoSerializer().serialize(self)))"
+        }
+    }
+    open class SymlinkInfoSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SymlinkInfo) -> JSON {
+            let output = [ 
+            "target": Serialization._StringSerializer.serialize(value.target),
+            ]
+            return .dictionary(output)
+        }
+        open func deserialize(_ json: JSON) -> SymlinkInfo {
+            switch json {
+                case .dictionary(let dict):
+                    let target = Serialization._StringSerializer.deserialize(dict["target"] ?? .null)
+                    return SymlinkInfo(target: target)
+                default:
+                    fatalError("Type error deserializing")
+            }
+        }
+    }
+
+    /// The SyncSetting union
+    public enum SyncSetting: CustomStringConvertible {
+        /// On first sync to members' computers, the specified folder will follow its parent folder's setting or
+        /// otherwise follow default sync behavior.
+        case default_
+        /// On first sync to members' computers, the specified folder will be set to not sync with selective sync.
+        case notSynced
+        /// The specified folder's not_synced setting is inactive due to its location or other configuration changes. It
+        /// will follow its parent folder's setting.
+        case notSyncedInactive
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SyncSettingSerializer().serialize(self)))"
+        }
+    }
+    open class SyncSettingSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SyncSetting) -> JSON {
+            switch value {
+                case .default_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("default")
+                    return .dictionary(d)
+                case .notSynced:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("not_synced")
+                    return .dictionary(d)
+                case .notSyncedInactive:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("not_synced_inactive")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> SyncSetting {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "default":
+                            return SyncSetting.default_
+                        case "not_synced":
+                            return SyncSetting.notSynced
+                        case "not_synced_inactive":
+                            return SyncSetting.notSyncedInactive
+                        case "other":
+                            return SyncSetting.other
+                        default:
+                            return SyncSetting.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The SyncSettingArg union
+    public enum SyncSettingArg: CustomStringConvertible {
+        /// On first sync to members' computers, the specified folder will follow its parent folder's setting or
+        /// otherwise follow default sync behavior.
+        case default_
+        /// On first sync to members' computers, the specified folder will be set to not sync with selective sync.
+        case notSynced
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SyncSettingArgSerializer().serialize(self)))"
+        }
+    }
+    open class SyncSettingArgSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SyncSettingArg) -> JSON {
+            switch value {
+                case .default_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("default")
+                    return .dictionary(d)
+                case .notSynced:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("not_synced")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> SyncSettingArg {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "default":
+                            return SyncSettingArg.default_
+                        case "not_synced":
+                            return SyncSettingArg.notSynced
+                        case "other":
+                            return SyncSettingArg.other
+                        default:
+                            return SyncSettingArg.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
+    /// The SyncSettingsError union
+    public enum SyncSettingsError: CustomStringConvertible {
+        /// An unspecified error.
+        case path(Files.LookupError)
+        /// Setting this combination of sync settings simultaneously is not supported.
+        case unsupportedCombination
+        /// The specified configuration is not supported.
+        case unsupportedConfiguration
+        /// An unspecified error.
+        case other
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(SyncSettingsErrorSerializer().serialize(self)))"
+        }
+    }
+    open class SyncSettingsErrorSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: SyncSettingsError) -> JSON {
+            switch value {
+                case .path(let arg):
+                    var d = ["path": Files.LookupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .unsupportedCombination:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unsupported_combination")
+                    return .dictionary(d)
+                case .unsupportedConfiguration:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unsupported_configuration")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> SyncSettingsError {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "path":
+                            let v = Files.LookupErrorSerializer().deserialize(d["path"] ?? .null)
+                            return SyncSettingsError.path(v)
+                        case "unsupported_combination":
+                            return SyncSettingsError.unsupportedCombination
+                        case "unsupported_configuration":
+                            return SyncSettingsError.unsupportedConfiguration
+                        case "other":
+                            return SyncSettingsError.other
+                        default:
+                            return SyncSettingsError.other
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The ThumbnailArg struct
     open class ThumbnailArg: CustomStringConvertible {
         /// The path to the image file you want to thumbnail.
@@ -3993,11 +4782,14 @@ open class Files {
         open let format: Files.ThumbnailFormat
         /// The size for the thumbnail image.
         open let size: Files.ThumbnailSize
-        public init(path: String, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64) {
+        /// How to resize and crop the image to achieve the desired size.
+        open let mode: Files.ThumbnailMode
+        public init(path: String, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64, mode: Files.ThumbnailMode = .strict) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
             self.path = path
             self.format = format
             self.size = size
+            self.mode = mode
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailArgSerializer().serialize(self)))"
@@ -4010,6 +4802,7 @@ open class Files {
             "path": Serialization._StringSerializer.serialize(value.path),
             "format": Files.ThumbnailFormatSerializer().serialize(value.format),
             "size": Files.ThumbnailSizeSerializer().serialize(value.size),
+            "mode": Files.ThumbnailModeSerializer().serialize(value.mode),
             ]
             return .dictionary(output)
         }
@@ -4019,7 +4812,8 @@ open class Files {
                     let path = Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
                     let format = Files.ThumbnailFormatSerializer().deserialize(dict["format"] ?? Files.ThumbnailFormatSerializer().serialize(.jpeg))
                     let size = Files.ThumbnailSizeSerializer().deserialize(dict["size"] ?? Files.ThumbnailSizeSerializer().serialize(.w64h64))
-                    return ThumbnailArg(path: path, format: format, size: size)
+                    let mode = Files.ThumbnailModeSerializer().deserialize(dict["mode"] ?? Files.ThumbnailModeSerializer().serialize(.strict))
+                    return ThumbnailArg(path: path, format: format, size: size, mode: mode)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -4129,6 +4923,57 @@ open class Files {
         }
     }
 
+    /// The ThumbnailMode union
+    public enum ThumbnailMode: CustomStringConvertible {
+        /// Scale down the image to fit within the given size.
+        case strict
+        /// Scale down the image to fit within the given size or its transpose.
+        case bestfit
+        /// Scale down the image to completely cover the given size or its transpose.
+        case fitoneBestfit
+
+        public var description: String {
+            return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailModeSerializer().serialize(self)))"
+        }
+    }
+    open class ThumbnailModeSerializer: JSONSerializer {
+        public init() { }
+        open func serialize(_ value: ThumbnailMode) -> JSON {
+            switch value {
+                case .strict:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("strict")
+                    return .dictionary(d)
+                case .bestfit:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("bestfit")
+                    return .dictionary(d)
+                case .fitoneBestfit:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("fitone_bestfit")
+                    return .dictionary(d)
+            }
+        }
+        open func deserialize(_ json: JSON) -> ThumbnailMode {
+            switch json {
+                case .dictionary(let d):
+                    let tag = Serialization.getTag(d)
+                    switch tag {
+                        case "strict":
+                            return ThumbnailMode.strict
+                        case "bestfit":
+                            return ThumbnailMode.bestfit
+                        case "fitone_bestfit":
+                            return ThumbnailMode.fitoneBestfit
+                        default:
+                            fatalError("Unknown tag \(tag)")
+                    }
+                default:
+                    fatalError("Failed to deserialize")
+            }
+        }
+    }
+
     /// The ThumbnailSize union
     public enum ThumbnailSize: CustomStringConvertible {
         /// 32 by 32 px.
@@ -4137,10 +4982,18 @@ open class Files {
         case w64h64
         /// 128 by 128 px.
         case w128h128
+        /// 256 by 256 px.
+        case w256h256
+        /// 480 by 320 px.
+        case w480h320
         /// 640 by 480 px.
         case w640h480
-        /// 1024 by 768.
+        /// 960 by 640 px.
+        case w960h640
+        /// 1024 by 768 px.
         case w1024h768
+        /// 2048 by 1536 px.
+        case w2048h1536
 
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(ThumbnailSizeSerializer().serialize(self)))"
@@ -4162,13 +5015,29 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("w128h128")
                     return .dictionary(d)
+                case .w256h256:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("w256h256")
+                    return .dictionary(d)
+                case .w480h320:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("w480h320")
+                    return .dictionary(d)
                 case .w640h480:
                     var d = [String: JSON]()
                     d[".tag"] = .str("w640h480")
                     return .dictionary(d)
+                case .w960h640:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("w960h640")
+                    return .dictionary(d)
                 case .w1024h768:
                     var d = [String: JSON]()
                     d[".tag"] = .str("w1024h768")
+                    return .dictionary(d)
+                case .w2048h1536:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("w2048h1536")
                     return .dictionary(d)
             }
         }
@@ -4183,10 +5052,18 @@ open class Files {
                             return ThumbnailSize.w64h64
                         case "w128h128":
                             return ThumbnailSize.w128h128
+                        case "w256h256":
+                            return ThumbnailSize.w256h256
+                        case "w480h320":
+                            return ThumbnailSize.w480h320
                         case "w640h480":
                             return ThumbnailSize.w640h480
+                        case "w960h640":
+                            return ThumbnailSize.w960h640
                         case "w1024h768":
                             return ThumbnailSize.w1024h768
+                        case "w2048h1536":
+                            return ThumbnailSize.w2048h1536
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
@@ -4200,6 +5077,8 @@ open class Files {
     public enum UploadError: CustomStringConvertible {
         /// Unable to save the uploaded contents to a file.
         case path(Files.UploadWriteFailed)
+        /// The supplied property group is invalid. The file has uploaded without property groups.
+        case propertiesError(FileProperties.InvalidPropertyGroupError)
         /// An unspecified error.
         case other
 
@@ -4215,6 +5094,10 @@ open class Files {
                     var d = Serialization.getFields(Files.UploadWriteFailedSerializer().serialize(arg))
                     d[".tag"] = .str("path")
                     return .dictionary(d)
+                case .propertiesError(let arg):
+                    var d = ["properties_error": FileProperties.InvalidPropertyGroupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("properties_error")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -4229,6 +5112,9 @@ open class Files {
                         case "path":
                             let v = Files.UploadWriteFailedSerializer().deserialize(json)
                             return UploadError.path(v)
+                        case "properties_error":
+                            let v = FileProperties.InvalidPropertyGroupErrorSerializer().deserialize(d["properties_error"] ?? .null)
+                            return UploadError.propertiesError(v)
                         case "other":
                             return UploadError.other
                         default:
@@ -4244,10 +5130,10 @@ open class Files {
     public enum UploadErrorWithProperties: CustomStringConvertible {
         /// Unable to save the uploaded contents to a file.
         case path(Files.UploadWriteFailed)
+        /// The supplied property group is invalid. The file has uploaded without property groups.
+        case propertiesError(FileProperties.InvalidPropertyGroupError)
         /// An unspecified error.
         case other
-        /// An unspecified error.
-        case propertiesError(FileProperties.InvalidPropertyGroupError)
 
         public var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(UploadErrorWithPropertiesSerializer().serialize(self)))"
@@ -4261,13 +5147,13 @@ open class Files {
                     var d = Serialization.getFields(Files.UploadWriteFailedSerializer().serialize(arg))
                     d[".tag"] = .str("path")
                     return .dictionary(d)
-                case .other:
-                    var d = [String: JSON]()
-                    d[".tag"] = .str("other")
-                    return .dictionary(d)
                 case .propertiesError(let arg):
                     var d = ["properties_error": FileProperties.InvalidPropertyGroupErrorSerializer().serialize(arg)]
                     d[".tag"] = .str("properties_error")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
                     return .dictionary(d)
             }
         }
@@ -4279,11 +5165,11 @@ open class Files {
                         case "path":
                             let v = Files.UploadWriteFailedSerializer().deserialize(json)
                             return UploadErrorWithProperties.path(v)
-                        case "other":
-                            return UploadErrorWithProperties.other
                         case "properties_error":
                             let v = FileProperties.InvalidPropertyGroupErrorSerializer().deserialize(d["properties_error"] ?? .null)
                             return UploadErrorWithProperties.propertiesError(v)
+                        case "other":
+                            return UploadErrorWithProperties.other
                         default:
                             fatalError("Unknown tag \(tag)")
                     }
@@ -4610,8 +5496,11 @@ open class Files {
     public enum UploadSessionFinishError: CustomStringConvertible {
         /// The session arguments are incorrect; the value explains the reason.
         case lookupFailed(Files.UploadSessionLookupError)
-        /// Unable to save the uploaded contents to a file.
+        /// Unable to save the uploaded contents to a file. Data has already been appended to the upload session. Please
+        /// retry with empty data body and updated offset.
         case path(Files.WriteError)
+        /// The supplied property group is invalid. The file has uploaded without property groups.
+        case propertiesError(FileProperties.InvalidPropertyGroupError)
         /// The batch request commits files into too many different shared folders. Please limit your batch request to
         /// files contained in a single shared folder.
         case tooManySharedFolderTargets
@@ -4635,6 +5524,10 @@ open class Files {
                 case .path(let arg):
                     var d = ["path": Files.WriteErrorSerializer().serialize(arg)]
                     d[".tag"] = .str("path")
+                    return .dictionary(d)
+                case .propertiesError(let arg):
+                    var d = ["properties_error": FileProperties.InvalidPropertyGroupErrorSerializer().serialize(arg)]
+                    d[".tag"] = .str("properties_error")
                     return .dictionary(d)
                 case .tooManySharedFolderTargets:
                     var d = [String: JSON]()
@@ -4661,6 +5554,9 @@ open class Files {
                         case "path":
                             let v = Files.WriteErrorSerializer().deserialize(d["path"] ?? .null)
                             return UploadSessionFinishError.path(v)
+                        case "properties_error":
+                            let v = FileProperties.InvalidPropertyGroupErrorSerializer().deserialize(d["properties_error"] ?? .null)
+                            return UploadSessionFinishError.propertiesError(v)
                         case "too_many_shared_folder_targets":
                             return UploadSessionFinishError.tooManySharedFolderTargets
                         case "too_many_write_operations":
@@ -4688,6 +5584,9 @@ open class Files {
         case closed
         /// The session must be closed before calling upload_session/finish_batch.
         case notClosed
+        /// You can not append to the upload session because the size of a file should not reach the max file size limit
+        /// (i.e. 350GB).
+        case tooLarge
         /// An unspecified error.
         case other
 
@@ -4715,6 +5614,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("not_closed")
                     return .dictionary(d)
+                case .tooLarge:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_large")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -4735,6 +5638,8 @@ open class Files {
                             return UploadSessionLookupError.closed
                         case "not_closed":
                             return UploadSessionLookupError.notClosed
+                        case "too_large":
+                            return UploadSessionLookupError.tooLarge
                         case "other":
                             return UploadSessionLookupError.other
                         default:
@@ -4843,7 +5748,8 @@ open class Files {
     open class UploadWriteFailed: CustomStringConvertible {
         /// The reason why the file couldn't be saved.
         open let reason: Files.WriteError
-        /// The upload session ID; this may be used to retry the commit.
+        /// The upload session ID; data has already been uploaded to the corresponding upload session and this ID may be
+        /// used to retry the commit with uploadSessionFinish.
         open let uploadSessionId: String
         public init(reason: Files.WriteError, uploadSessionId: String) {
             self.reason = reason
@@ -4986,6 +5892,8 @@ open class Files {
         case disallowedName
         /// This endpoint cannot move or delete team folders.
         case teamFolder
+        /// There are too many write operations in user's Dropbox. Please retry this request.
+        case tooManyWriteOperations
         /// An unspecified error.
         case other
 
@@ -5021,6 +5929,10 @@ open class Files {
                     var d = [String: JSON]()
                     d[".tag"] = .str("team_folder")
                     return .dictionary(d)
+                case .tooManyWriteOperations:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("too_many_write_operations")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -5046,6 +5958,8 @@ open class Files {
                             return WriteError.disallowedName
                         case "team_folder":
                             return WriteError.teamFolder
+                        case "too_many_write_operations":
+                            return WriteError.tooManyWriteOperations
                         case "other":
                             return WriteError.other
                         default:
@@ -5123,7 +6037,7 @@ open class Files {
     static let alphaGetMetadata = Route(
         name: "alpha/get_metadata",
         namespace: "files",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Files.AlphaGetMetadataArgSerializer(),
         responseSerializer: Files.MetadataSerializer(),
         errorSerializer: Files.AlphaGetMetadataErrorSerializer(),
@@ -5133,7 +6047,7 @@ open class Files {
     static let alphaUpload = Route(
         name: "alpha/upload",
         namespace: "files",
-        deprecated: false,
+        deprecated: true,
         argSerializer: Files.CommitInfoWithPropertiesSerializer(),
         responseSerializer: Files.FileMetadataSerializer(),
         errorSerializer: Files.UploadErrorWithPropertiesSerializer(),
@@ -5210,6 +6124,26 @@ open class Files {
         attrs: ["host": "api",
                 "style": "rpc"]
     )
+    static let createFolderBatch = Route(
+        name: "create_folder_batch",
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.CreateFolderBatchArgSerializer(),
+        responseSerializer: Files.CreateFolderBatchLaunchSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
+    static let createFolderBatchCheck = Route(
+        name: "create_folder_batch/check",
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Files.CreateFolderBatchJobStatusSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
+        attrs: ["host": "api",
+                "style": "rpc"]
+    )
     static let createFolderV2 = Route(
         name: "create_folder_v2",
         namespace: "files",
@@ -5267,6 +6201,16 @@ open class Files {
         argSerializer: Files.DownloadArgSerializer(),
         responseSerializer: Files.FileMetadataSerializer(),
         errorSerializer: Files.DownloadErrorSerializer(),
+        attrs: ["host": "content",
+                "style": "download"]
+    )
+    static let downloadZip = Route(
+        name: "download_zip",
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.DownloadZipArgSerializer(),
+        responseSerializer: Files.DownloadZipResultSerializer(),
+        errorSerializer: Files.DownloadZipErrorSerializer(),
         attrs: ["host": "content",
                 "style": "download"]
     )
