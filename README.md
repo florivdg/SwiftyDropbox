@@ -13,6 +13,7 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
   * [Register your application](#register-your-application)
   * [Obtain an OAuth 2.0 token](#obtain-an-oauth-20-token)
 * [SDK distribution](#sdk-distribution)
+  * [Swift Package Manager](#swift-package-manager)
   * [CocoaPods](#cocoapods)
   * [Carthage](#carthage)
   * [Manually add subproject](#manually-add-subproject)
@@ -43,6 +44,7 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
 * [Documentation](#documentation)
 * [Stone](#stone)
 * [Modifications](#modifications)
+* [App Store Connect Privacy Labels](#app-store-connect-privacy-labels)
 * [Bugs](#bugs)
 
 ---
@@ -51,8 +53,8 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
 
 - iOS 9.0+
 - macOS 10.11+
-- Xcode 10.0+
-- Swift 4.2+
+- Xcode 10.0+ (11.0+ if you use Carthage)
+- Swift 5.0+
 
 ## Get Started
 
@@ -73,6 +75,17 @@ Otherwise, you can obtain an OAuth token programmatically using the SDK's pre-de
 ## SDK distribution
 
 You can integrate the Dropbox Swift SDK into your project using one of several methods.
+
+### Swift Package Manager
+
+The Dropbox Swift SDK can be installed in your project using [Swift Package Manager](https://swift.org/package-manager/) by specifying the Dropbox Swift SDK repository URL:
+
+```
+https://github.com/dropbox/SwiftyDropbox.git
+```
+
+Refer to [Apple's "Adding Package Dependencies to Your App" documentation](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app) for more information.
+
 
 ### CocoaPods
 
@@ -110,7 +123,7 @@ $ pod update
 
 ### Carthage
 
-You can also integrate the Dropbox Swift SDK into your project using [Carthage](https://github.com/Carthage/Carthage), a decentralized dependency manager for Cocoa. Carthage offers more flexibility than CocoaPods, but requires some additional work. You can install Carthage (with Xcode 7+) via [Homebrew](http://brew.sh/):
+You can also integrate the Dropbox Swift SDK into your project using [Carthage](https://github.com/Carthage/Carthage), a decentralized dependency manager for Cocoa. Carthage offers more flexibility than CocoaPods, but requires some additional work. Carthage 0.37.0 is required due to XCFramework requirements on Xcode 12. You can install Carthage (with Xcode 11+) via [Homebrew](http://brew.sh/):
 
 ```bash
 brew update
@@ -121,7 +134,7 @@ To install the Dropbox Swift SDK via Carthage, you need to create a `Cartfile` i
 
 ```
 # SwiftyDropbox
-github "https://github.com/dropbox/SwiftyDropbox" ~> 5.1.0
+github "https://github.com/dropbox/SwiftyDropbox" ~> 7.0.0
 ```
 
 Then, run the following command to install the dependency to checkout and build the Dropbox Swift SDK repository:
@@ -129,65 +142,19 @@ Then, run the following command to install the dependency to checkout and build 
 ##### iOS
 
 ```bash
-carthage update --platform iOS
+carthage update --platform iOS --use-xcframeworks
 ```
 
-In the Project Navigator in Xcode, select your project, and then navigate to **General** > **Linked Frameworks and Libraries**, then drag and drop `SwiftyDropbox.framework` (from `Carthage/Build/iOS`). Then to add SwiftyDropbox's Alamofire dependency, drag and drop `Alamofire.framework` (from `Carthage/Build/iOS`) to **Linked Frameworks and Libraries**, as well.
-
-Then, navigate to **Build Phases** > **+** > **New Run Script Phase**. In the newly-created **Run Script** section, add the following code to the script body area (beneath the "Shell" box):
-
-```
-/usr/local/bin/carthage copy-frameworks
-```
-
-Then, navigate to the **Input Files** section and add the following path:
-
-```
-$(SRCROOT)/Carthage/Build/iOS/SwiftyDropbox.framework
-$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework
-```
+Then, in the Project Navigator in Xcode, select your project, and then navigate to your project's build target > **General** > **Frameworks, Libraries, and Embedded Content** then drag both the `SwiftyDropbox.xcframework` and `Alamofire.xcframework`  files (from `Carthage/Build`) into the table, choosing `Embed & Sign`.
 
 ##### macOS
 ```bash
-carthage update --platform Mac
-```
-
-In the Project Navigator in Xcode, select your project, and then navigate to **General** > **Embedded Binaries**, then drag and drop `SwiftyDropbox.framework` (from `Carthage/Build/Mac`). Then to add SwiftyDropbox's Alamofire dependency, drag and drop `Alamofire.framework` (from `Carthage/Build/Mac`) to **Linked Frameworks and Libraries**, as well.
-
-Then navigate to **Build Phases** > **+** > **New Copy Files Phase**. In the newly-created **Copy Files** section, click the **Destination** drop-down menu and select **Products Directory**, then drag and drop `SwiftyDropbox.framework.dSYM` (from `Carthage/Build/Mac`).
-
----
-
-### Manually add subproject
-
-Finally, you can also integrate the Dropbox Swift SDK into your project manually with the help of Carthage. Please take the following steps:
-
-Create a `Cartfile` in your project with the same contents as the Cartfile listed in the [Carthage](#carthage) section of the README.
-
-Then, run the following command to checkout and build the Dropbox Swift SDK repository:
-
-##### iOS
-
-```bash
-carthage update --platform iOS
+carthage update --platform Mac --use-xcframeworks
 ```
 
 Once you have checked-out out all the necessary code via Carthage, drag the `Carthage/Checkouts/SwiftyDropbox/Source/SwiftyDropbox/SwiftyDropbox.xcodeproj` file into your project as a subproject.
 
-Then, in the Project Navigator in Xcode, select your project, and then navigate to your project's build target > **General** > **Embedded Binaries** > **+** and then add the `SwiftyDropbox.framework` file for the iOS platform.
-
-Finally, to retrieve SwiftyDropbox's Alamofire dependency, drag the `Carthage/Checkouts/Alamofire/Alamofire.xcodeproj` project into your project (as you did with `SwiftyDropbox.xcodeproj`). Then, in the Project Navigator in Xcode, select your project, and then navigate to your project's build target > **General** > **Linked Frameworks and Libraries** > **+** and then add the `Alamofire.framework` file for the iOS platform.
-
-##### macOS
-```bash
-carthage update --platform Mac
-```
-
-Once you have checked-out out all the necessary code via Carthage, drag the `Carthage/Checkouts/SwiftyDropbox/Source/SwiftyDropbox/SwiftyDropbox.xcodeproj` file into your project as a subproject.
-
-Then, in the Project Navigator in Xcode, select your project, and then navigate to your project's build target > **General** > **Embedded Binaries** > **+** and then add the `SwiftyDropbox.framework` file for the macOS platform.
-
-Finally, to retrieve SwiftyDropbox's Alamofire dependency, drag the `Carthage/Checkouts/Alamofire/Alamofire.xcodeproj` project into your project (as you did with `SwiftyDropbox.xcodeproj`). Then, in the Project Navigator in Xcode, select your project, and then navigate to your project's build target > **General** > **Linked Frameworks and Libraries** > **+** and then add the `Alamofire.framework` file for the macOS platform.
+Then, in the Project Navigator in Xcode, select your project, and then navigate to your project's build target > **General** > **Embedded Binaries** then drag both the `SwiftyDropbox.xcframework` and `Alamofire.xcframework`  files (from `Carthage/Build`) into the table, choosing `Embed & Sign`.
 
 ---
 
@@ -278,7 +245,7 @@ func applicationDidFinishLaunching(_ aNotification: Notification) {
 #### Begin the authorization flow
 
 You can commence the auth flow by calling `authorizeFromController:controller:openURL` method in your application's
-view controller.
+view controller. Note that the controller reference will be weakly held.
 
 From your view controller:
 
@@ -288,11 +255,25 @@ From your view controller:
 import SwiftyDropbox
 
 func myButtonInControllerPressed() {
+
+    // Use only one of these two flows at once:
+
+    // Legacy authorization flow that grants a long-lived token.
     DropboxClientsManager.authorizeFromController(UIApplication.shared,
                                                   controller: self,
                                                   openURL: { (url: URL) -> Void in
                                                     UIApplication.shared.openURL(url)
                                                   })
+
+  // New: OAuth 2 code flow with PKCE that grants a short-lived token with scopes.
+  let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
+  DropboxClientsManager.authorizeFromControllerV2(
+      UIApplication.shared,
+      controller: self,
+      loadingStatusDelegate: nil,
+      openURL: { (url: URL) -> Void in UIApplication.shared.openURL(url) },
+      scopeRequest: scopeRequest
+  )
 }
 
 ```
@@ -303,11 +284,25 @@ func myButtonInControllerPressed() {
 import SwiftyDropbox
 
 func myButtonInControllerPressed() {
+
+    // Use only one of these two flows at once:
+
+    // Legacy authorization flow that grants a long-lived token.
     DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared,
                                                   controller: self,
                                                   openURL: { (url: URL) -> Void in
                                                     NSWorkspace.shared.open(url)
                                                   })
+
+  // New: OAuth 2 code flow with PKCE that grants a short-lived token with scopes.
+  let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
+  DropboxClientsManager.authorizeFromControllerV2(
+      sharedWorkspace: NSWorkspace.shared,
+      controller: self,
+      loadingStatusDelegate: nil,
+      openURL: {(url: URL) -> Void in NSWorkspace.shared.open(url)},
+      scopeRequest: scopeRequest
+  )
 }
 ```
 
@@ -330,19 +325,46 @@ To handle the redirection back into the Swift SDK once the authentication flow i
 import SwiftyDropbox
 
 func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-    if let authResult = DropboxClientsManager.handleRedirectURL(url) {
-        switch authResult {
-        case .success:
-            print("Success! User is logged into Dropbox.")
-        case .cancel:
-            print("Authorization flow was manually canceled by user!")
-        case .error(_, let description):
-            print("Error: \(description)")
-        }
+    let oauthCompletion: DropboxOAuthCompletion = {
+      if let authResult = $0 {
+          switch authResult {
+          case .success:
+              print("Success! User is logged into DropboxClientsManager.")
+          case .cancel:
+              print("Authorization flow was manually canceled by user!")
+          case .error(_, let description):
+              print("Error: \(String(describing: description))")
+          }
+      }
     }
-    return true
+    let canHandleUrl = DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
+    return canHandleUrl
 }
 
+```
+Or if your app is iOS13+, or your app also supports Scenes, add the following code into your application's main scene delegate:
+```Swift
+import SwiftyDropbox
+
+func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+     let oauthCompletion: DropboxOAuthCompletion = {
+      if let authResult = $0 {
+          switch authResult {
+          case .success:
+              print("Success! User is logged into DropboxClientsManager.")
+          case .cancel:
+              print("Authorization flow was manually canceled by user!")
+          case .error(_, let description):
+              print("Error: \(String(describing: description))")
+          }
+      }
+    }
+    
+    for context in URLContexts {
+        // stop iterating after the first handle-able url      
+        if DropboxClientsManager.handleRedirectURL(context.url, completion: oauthCompletion) { break }
+    }
+}
 ```
 
 ##### macOS
@@ -363,16 +385,19 @@ func handleGetURLEvent(_ event: NSAppleEventDescriptor?, replyEvent: NSAppleEven
     if let aeEventDescriptor = event?.paramDescriptor(forKeyword: AEKeyword(keyDirectObject)) {
         if let urlStr = aeEventDescriptor.stringValue {
             let url = URL(string: urlStr)!
-            if let authResult = DropboxClientsManager.handleRedirectURL(url) {
-                switch authResult {
-                case .success:
-                    print("Success! User is logged into Dropbox.")
-                case .cancel:
-                    print("Authorization flow was manually canceled by user!")
-                case .error(_, let description):
-                    print("Error: \(description)")
+            let oauthCompletion: DropboxOAuthCompletion = {
+                if let authResult = $0 {
+                    switch authResult {
+                    case .success:
+                        print("Success! User is logged into Dropbox.")
+                    case .cancel:
+                        print("Authorization flow was manually canceled by user!")
+                    case .error(_, let description):
+                        print("Error: \(String(describing: description))")
+                    }
                 }
             }
+            DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
             // this brings your application back the foreground on redirect
             NSApp.activate(ignoringOtherApps: true)
         }
@@ -803,6 +828,42 @@ To ensure your changes have not broken any existing functionality, you can run a
 * open Info.plist and configure the "URL types > Item 0 (Editor) > URL Schemes > Item 0" key to db-"App key"
 * open AppDelegate.swift and replace "FULL_DROPBOX_APP_KEY" with the App key as well
 * run the test app on your device and follow the on-screen instructions
+
+---
+
+## App Store Connect Privacy Labels
+
+To assist developers using Dropbox SDKs in filling out Apple’s Privacy Practices Questionnaire, we’ve provided the below information on the data that may be collected and used by Dropbox. 
+
+As you complete the questionnaire you should note that the below information is general in nature. Dropbox SDKs are designed to be configured by the developer to incorporate Dropbox functionality as is best suited to their application. As a result of this customizable nature of the Dropbox SDKs, we are unable to provide information on the actual data collection and use for each application. We advise developers reference our Dropbox for HTTP Developers for specifics on how data is collected by each Dropbox API. 
+
+In addition, you should note that the information below only identifies Dropbox’s collection and use of data. You are responsible for identifying your own collection and use of data in your app, which may result in different questionnaire answers than identified below:
+
+| Data                    | Collected by Dropbox                                                      | Data Use                                                                 | Data Linked to the User | Tracking |
+| ----------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ----------------------- | -------- |
+| **Contact Info**        |                                                                           |                                                                          |                         |          |
+| &emsp;• Name            | Not collected                                                             | N/A                                                                      | N/A                     | N/A      |
+| &emsp;• Email Address   | May be collected<br>(if you enable authentication using an email address) | • Application functionality                                              | Y                       | N        |
+| **Health & Fitness**    | Not collected                                                             | N/A                                                                      | N/A                     | N/A      |
+| **Financial Info**      | Not collected                                                             | N/A                                                                      | N/A                     | N/A      |
+| **Location**            | Not collected                                                             | N/A                                                                      | N/A                     | N/A      |
+| **Sensitive Info**      | Not collected                                                             | N/A                                                                      | N/A                     | N/A      |
+| **Contacts**            | Not collected                                                             | N/A                                                                      | N/A                     | N/A      |
+| **User Content**        |                                                                           |                                                                          |                         |          |
+| &emsp;• Audio Data      | May be collected                                                          | • Application functionality                                              | Y                       | N        |
+| &emsp;• Photos or Videos | May be collected                                                          | • Application functionality                                              | Y                       | N        |
+| &emsp;• Other User Content | May be collected                                                          | • Application functionality                                              | Y                       | N        |
+| **Browsing History**    | Not collected                                                             | N/A                                                                      | N/A                     | N/A      |
+| **Search History**      |                                                                           |                                                                          |                         |          |
+| &emsp;• Search History  | May be collected<br>(if using search functionality)                       | • Application functionality<br>• Analytics                               | Y                       | N        |
+| **Identifiers**         |                                                                           |                                                                          |                         |          |
+| &emsp;• User ID         | Collected                                                                 | • Application functionality<br>• Analytics                               | Y                       | N        |
+| **Purchases**           | Not collected                                                             | N/A                                                                      | N/A                     | N/A      |
+| **Usage Data**          |                                                                           |                                                                          |                         |          |
+| &emsp;• Product Interaction | Collected                                                                 | • Application functionality <br>• Analytics<br>• Product personalization | Y                       | N        |
+| **Diagnostics**         |                                                                           |                                                                          |                         |          |
+| &emsp;• Other Diagnostic Data | Collected<br>(API call logs)                                              | • Application functionality                                              | Y                       | N        |
+| **Other Data**          | N/A                                                                       | N/A                                                                      | N/A                     | N/A      |
 
 ---
 

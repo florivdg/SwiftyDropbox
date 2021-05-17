@@ -26,46 +26,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        let oauthCompletion: DropboxOAuthCompletion = {
+            if let authResult = $0 {
+                switch authResult {
+                case .success:
+                    print("Success! User is logged into DropboxClientsManager.")
+                case .cancel:
+                    print("Authorization flow was manually canceled by user!")
+                case .error(_, let description):
+                    print("Error: \(String(describing: description))")
+                }
+            }
+            (self.window?.rootViewController as? ViewController)?.checkButtons()
+        }
+
+        let canHandleUrl: Bool
         switch(appPermission) {
         case .fullDropbox:
-            if let authResult = DropboxClientsManager.handleRedirectURL(url) {
-                switch authResult {
-                case .success:
-                    print("Success! User is logged into DropboxClientsManager.")
-                case .cancel:
-                    print("Authorization flow was manually canceled by user!")
-                case .error(_, let description):
-                    print("Error: \(description)")
-                }
-            }
+            canHandleUrl = DropboxClientsManager.handleRedirectURL(url, completion: oauthCompletion)
         case .teamMemberFileAccess:
-            if let authResult = DropboxClientsManager.handleRedirectURLTeam(url) {
-                switch authResult {
-                case .success:
-                    print("Success! User is logged into DropboxClientsManager.")
-                case .cancel:
-                    print("Authorization flow was manually canceled by user!")
-                case .error(_, let description):
-                    print("Error: \(description)")
-                }
-            }
+            canHandleUrl = DropboxClientsManager.handleRedirectURLTeam(url, completion: oauthCompletion)
         case .teamMemberManagement:
-            if let authResult = DropboxClientsManager.handleRedirectURLTeam(url) {
-                switch authResult {
-                case .success:
-                    print("Success! User is logged into DropboxClientsManager.")
-                case .cancel:
-                    print("Authorization flow was manually canceled by user!")
-                case .error(_, let description):
-                    print("Error: \(description)")
-                }
-            }
+            canHandleUrl = DropboxClientsManager.handleRedirectURLTeam(url, completion: oauthCompletion)
         }
-        
-        let mainController = self.window!.rootViewController as! ViewController
-        mainController.checkButtons()
-
-        return true
+        return canHandleUrl
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

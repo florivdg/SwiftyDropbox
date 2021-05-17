@@ -32,7 +32,18 @@ _cmdline_parser.add_argument(
     type=str,
     help='Path to clone of stone repository.',
 )
-
+_cmdline_parser.add_argument(
+    '-o',
+    '--output-path',
+    type=str,
+    help='Path to generation output.',
+)
+_cmdline_parser.add_argument(
+    '-r',
+    '--route-whitelist-filter',
+    type=str,
+    help='Path to route whitelist filter used by Stone. See stone -r for detailed instructions.',
+)
 
 def main():
     """The entry point for the program."""
@@ -53,20 +64,38 @@ def main():
     if args.stone:
         stone_path = args.stone
 
-    dropbox_pkg_path = os.path.abspath('Source/SwiftyDropbox/Shared/Generated')
+    dropbox_default_output_path = 'Source/SwiftyDropbox/Shared/Generated'
+    dropbox_pkg_path = args.output_path if args.output_path else dropbox_default_output_path
+
+    # we run stone generation relative to the stone module,
+    # so we make our output path absolute here so it's relative to where we are called
+    if not os.path.isabs(dropbox_pkg_path):
+        dropbox_pkg_path = os.path.abspath(dropbox_pkg_path)
 
     # clear out all old files
-    shutil.rmtree(dropbox_pkg_path)
+    if os.path.exists(dropbox_pkg_path):
+        shutil.rmtree(dropbox_pkg_path)
     os.makedirs(dropbox_pkg_path)
 
     if verbose:
         print('Dropbox package path: %s' % dropbox_pkg_path)
-
-    if verbose:
         print('Generating Swift types')
+
+    stone_cmd_prefix = [
+        sys.executable,
+        '-m', 'stone.cli',
+        '-a', 'host',
+        '-a', 'style',
+        '-a', 'auth',
+    ]
+
+    if args.route_whitelist_filter:
+        stone_cmd_prefix += ['-r', args.route_whitelist_filter]
+
+    types_cmd = stone_cmd_prefix + ['swift_types', dropbox_pkg_path] + specs
+
     o = subprocess.check_output(
-        (['python', '-m', 'stone.cli', '-a', 'host', '-a', 'style', 'swift_types', dropbox_pkg_path] +
-         specs),
+        (types_cmd),
         cwd=stone_path)
     if o:
         print('Output:', o)
@@ -76,17 +105,18 @@ def main():
 
     if verbose:
         print('Generating Swift user and team clients')
+
     o = subprocess.check_output(
-        (['python', '-m', 'stone.cli', '-a', 'host', '-a', 'style', 'swift_client', dropbox_pkg_path] +
-         specs + ['-b', 'team', '--', '-m', 'Base', '-c', 'DropboxBase',
-         '-t', 'DropboxTransportClient', '-y', client_args, '-z', style_to_request]),
+        (stone_cmd_prefix + ['swift_client', dropbox_pkg_path] +
+            specs + ['-b', 'team', '--', '-m', 'Base', '-c', 'DropboxBase',
+            '-t', 'DropboxTransportClient', '-y', client_args, '-z', style_to_request]),
         cwd=stone_path)
     if o:
         print('Output:', o)
     o = subprocess.check_output(
-        (['python', '-m', 'stone.cli', '-a', 'host', '-a', 'style', 'swift_client', dropbox_pkg_path] +
-         specs + ['-w', 'team', '--', '-m', 'BaseTeam', '-c', 'DropboxTeamBase',
-         '-t', 'DropboxTransportClient', '-y', client_args, '-z', style_to_request]),
+        (stone_cmd_prefix + ['swift_client', dropbox_pkg_path] +
+            specs + ['-w', 'team', '--', '-m', 'BaseTeam', '-c', 'DropboxTeamBase',
+            '-t', 'DropboxTransportClient', '-y', client_args, '-z', style_to_request]),
         cwd=stone_path)
     if o:
         print('Output:', o)

@@ -7,12 +7,24 @@ import SwiftyDropbox
 
 class ViewController: UIViewController {
     @IBOutlet weak var runTestsButton: UIButton!
-    @IBOutlet weak var linkButton: UIButton!
+    @IBOutlet weak var tokenFlowlinkButton: UIButton!
+    @IBOutlet weak var codeFlowlinkButton: UIButton!
     @IBOutlet weak var unlinkButton: UIButton!
     @IBOutlet weak var runBatchUploadTestsButton: UIButton!
     
-    @IBAction func linkButtonPressed(_ sender: AnyObject) {
+    @IBAction func tokenFlowLinkButtonPressed(_ sender: AnyObject) {
         DropboxClientsManager.authorizeFromController(UIApplication.shared, controller: self, openURL: {(url: URL) -> Void in UIApplication.shared.openURL(url)})
+    }
+
+    @IBAction func codeFlowLinkButtonPressed(_ sender: Any) {
+        let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
+        DropboxClientsManager.authorizeFromControllerV2(
+            UIApplication.shared,
+            controller: self,
+            loadingStatusDelegate: nil,
+            openURL: { (url: URL) -> Void in UIApplication.shared.openURL(url) },
+            scopeRequest: scopeRequest
+        )
     }
 
     @IBAction func unlinkButtonPressed(_ sender: AnyObject) {
@@ -58,12 +70,14 @@ class ViewController: UIViewController {
 
     func checkButtons() {
         if DropboxClientsManager.authorizedClient != nil || DropboxClientsManager.authorizedTeamClient != nil {
-            linkButton.isHidden = true
+            tokenFlowlinkButton.isHidden = true
+            codeFlowlinkButton.isHidden = true
             unlinkButton.isHidden = false
             runTestsButton.isHidden = false
             runBatchUploadTestsButton.isHidden = false
         } else {
-            linkButton.isHidden = false
+            tokenFlowlinkButton.isHidden = false
+            codeFlowlinkButton.isHidden = false
             unlinkButton.isHidden = true
             runTestsButton.isHidden = true
             runBatchUploadTestsButton.isHidden = true

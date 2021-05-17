@@ -357,7 +357,8 @@ open class Sharing {
     public enum AddFolderMemberError: CustomStringConvertible {
         /// Unable to access shared folder.
         case accessError(Sharing.SharedFolderAccessError)
-        /// The current user's e-mail address is unverified.
+        /// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailUnverified
         /// The current user has been banned.
         case bannedMember
@@ -380,6 +381,8 @@ open class Sharing {
         case teamFolder
         /// The current user does not have permission to perform this action.
         case noPermission
+        /// Invalid shared folder error will be returned as an access_error.
+        case invalidSharedFolder
         /// An unspecified error.
         case other
 
@@ -439,6 +442,10 @@ open class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .str("no_permission")
                     return .dictionary(d)
+                case .invalidSharedFolder:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invalid_shared_folder")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -478,6 +485,8 @@ open class Sharing {
                             return AddFolderMemberError.teamFolder
                         case "no_permission":
                             return AddFolderMemberError.noPermission
+                        case "invalid_shared_folder":
+                            return AddFolderMemberError.invalidSharedFolder
                         case "other":
                             return AddFolderMemberError.other
                         default:
@@ -532,8 +541,8 @@ open class Sharing {
         case invalidDropboxId(String)
         /// The value is the e-email address that is malformed.
         case invalidEmail(String)
-        /// The value is the ID of the Dropbox user with an unverified e-mail address.  Invite unverified users by
-        /// e-mail address instead of by their Dropbox ID.
+        /// The value is the ID of the Dropbox user with an unverified email address. Invite unverified users by email
+        /// address instead of by their Dropbox ID.
         case unverifiedDropboxId(String)
         /// At least one of the specified groups in members in AddFolderMemberArg is deleted.
         case groupDeleted
@@ -980,7 +989,8 @@ open class Sharing {
     public enum CreateSharedLinkWithSettingsError: CustomStringConvertible {
         /// An unspecified error.
         case path(Files.LookupError)
-        /// User's email should be verified.
+        /// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailNotVerified
         /// The shared link already exists. You can call listSharedLinks to get the  existing link, or use the provided
         /// metadata if it is returned.
@@ -2781,7 +2791,7 @@ open class Sharing {
 
     /// Information about the recipient of a shared content invitation.
     public enum InviteeInfo: CustomStringConvertible {
-        /// E-mail address of invited user.
+        /// Email address of invited user.
         case email(String)
         /// An unspecified error.
         case other
@@ -4619,7 +4629,7 @@ open class Sharing {
     public enum MemberSelector: CustomStringConvertible {
         /// Dropbox account, team member, or group ID of member.
         case dropboxId(String)
-        /// E-mail address of member.
+        /// Email address of member.
         case email(String)
         /// An unspecified error.
         case other
@@ -4721,7 +4731,8 @@ open class Sharing {
         case other
         /// There is an error with the given settings.
         case settingsError(Sharing.SharedLinkSettingsError)
-        /// The caller's email should be verified.
+        /// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailNotVerified
 
         public var description: String {
@@ -5705,7 +5716,8 @@ open class Sharing {
     public enum RequestedLinkAccessLevel: CustomStringConvertible {
         /// Users who use the link can view and comment on the content.
         case viewer
-        /// Users who use the link can edit, view and comment on the content.
+        /// Users who use the link can edit, view and comment on the content. Note not all file types support edit links
+        /// yet.
         case editor
         /// Request for the maximum access level you can set the link to.
         case max
@@ -6192,7 +6204,8 @@ open class Sharing {
 
     /// The ShareFolderErrorBase union
     public enum ShareFolderErrorBase: CustomStringConvertible {
-        /// The current user's e-mail address is unverified.
+        /// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailUnverified
         /// path in ShareFolderArg is invalid.
         case badPath(Sharing.SharePathError)
@@ -6260,7 +6273,8 @@ open class Sharing {
 
     /// The ShareFolderError union
     public enum ShareFolderError: CustomStringConvertible {
-        /// The current user's e-mail address is unverified.
+        /// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailUnverified
         /// path in ShareFolderArg is invalid.
         case badPath(Sharing.SharePathError)
@@ -6461,6 +6475,10 @@ open class Sharing {
         case isOsxPackage
         /// We do not support sharing a folder inside a Mac OS X package.
         case insideOsxPackage
+        /// We do not support sharing the Vault folder.
+        case isVault
+        /// We do not support sharing the Family folder.
+        case isFamily
         /// An unspecified error.
         case other
 
@@ -6524,6 +6542,14 @@ open class Sharing {
                     var d = [String: JSON]()
                     d[".tag"] = .str("inside_osx_package")
                     return .dictionary(d)
+                case .isVault:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("is_vault")
+                    return .dictionary(d)
+                case .isFamily:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("is_family")
+                    return .dictionary(d)
                 case .other:
                     var d = [String: JSON]()
                     d[".tag"] = .str("other")
@@ -6562,6 +6588,10 @@ open class Sharing {
                             return SharePathError.isOsxPackage
                         case "inside_osx_package":
                             return SharePathError.insideOsxPackage
+                        case "is_vault":
+                            return SharePathError.isVault
+                        case "is_family":
+                            return SharePathError.isFamily
                         case "other":
                             return SharePathError.other
                         default:
@@ -6976,7 +7006,9 @@ open class Sharing {
         public let parentSharedFolderId: String?
         /// The lower-cased full path of this shared folder. Absent for unmounted folders.
         public let pathLower: String?
-        public init(accessType: Sharing.AccessLevel, isInsideTeamFolder: Bool, isTeamFolder: Bool, ownerDisplayNames: Array<String>? = nil, ownerTeam: Users.Team? = nil, parentSharedFolderId: String? = nil, pathLower: String? = nil) {
+        /// Display name for the parent folder.
+        public let parentFolderName: String?
+        public init(accessType: Sharing.AccessLevel, isInsideTeamFolder: Bool, isTeamFolder: Bool, ownerDisplayNames: Array<String>? = nil, ownerTeam: Users.Team? = nil, parentSharedFolderId: String? = nil, pathLower: String? = nil, parentFolderName: String? = nil) {
             self.accessType = accessType
             self.isInsideTeamFolder = isInsideTeamFolder
             self.isTeamFolder = isTeamFolder
@@ -6987,6 +7019,8 @@ open class Sharing {
             self.parentSharedFolderId = parentSharedFolderId
             nullableValidator(stringValidator())(pathLower)
             self.pathLower = pathLower
+            nullableValidator(stringValidator())(parentFolderName)
+            self.parentFolderName = parentFolderName
         }
         open var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(SharedFolderMetadataBaseSerializer().serialize(self)))"
@@ -7003,6 +7037,7 @@ open class Sharing {
             "owner_team": NullableSerializer(Users.TeamSerializer()).serialize(value.ownerTeam),
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
             "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
+            "parent_folder_name": NullableSerializer(Serialization._StringSerializer).serialize(value.parentFolderName),
             ]
             return .dictionary(output)
         }
@@ -7016,7 +7051,8 @@ open class Sharing {
                     let ownerTeam = NullableSerializer(Users.TeamSerializer()).deserialize(dict["owner_team"] ?? .null)
                     let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .null)
                     let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .null)
-                    return SharedFolderMetadataBase(accessType: accessType, isInsideTeamFolder: isInsideTeamFolder, isTeamFolder: isTeamFolder, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower)
+                    let parentFolderName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_folder_name"] ?? .null)
+                    return SharedFolderMetadataBase(accessType: accessType, isInsideTeamFolder: isInsideTeamFolder, isTeamFolder: isTeamFolder, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower, parentFolderName: parentFolderName)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -7043,7 +7079,7 @@ open class Sharing {
         public let timeInvited: Date
         /// Whether the folder inherits its members from its parent.
         public let accessInheritance: Sharing.AccessInheritance
-        public init(accessType: Sharing.AccessLevel, isInsideTeamFolder: Bool, isTeamFolder: Bool, name: String, policy: Sharing.FolderPolicy, previewUrl: String, sharedFolderId: String, timeInvited: Date, ownerDisplayNames: Array<String>? = nil, ownerTeam: Users.Team? = nil, parentSharedFolderId: String? = nil, pathLower: String? = nil, linkMetadata: Sharing.SharedContentLinkMetadata? = nil, permissions: Array<Sharing.FolderPermission>? = nil, accessInheritance: Sharing.AccessInheritance = .inherit) {
+        public init(accessType: Sharing.AccessLevel, isInsideTeamFolder: Bool, isTeamFolder: Bool, name: String, policy: Sharing.FolderPolicy, previewUrl: String, sharedFolderId: String, timeInvited: Date, ownerDisplayNames: Array<String>? = nil, ownerTeam: Users.Team? = nil, parentSharedFolderId: String? = nil, pathLower: String? = nil, parentFolderName: String? = nil, linkMetadata: Sharing.SharedContentLinkMetadata? = nil, permissions: Array<Sharing.FolderPermission>? = nil, accessInheritance: Sharing.AccessInheritance = .inherit) {
             self.linkMetadata = linkMetadata
             stringValidator()(name)
             self.name = name
@@ -7055,7 +7091,7 @@ open class Sharing {
             self.sharedFolderId = sharedFolderId
             self.timeInvited = timeInvited
             self.accessInheritance = accessInheritance
-            super.init(accessType: accessType, isInsideTeamFolder: isInsideTeamFolder, isTeamFolder: isTeamFolder, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower)
+            super.init(accessType: accessType, isInsideTeamFolder: isInsideTeamFolder, isTeamFolder: isTeamFolder, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower, parentFolderName: parentFolderName)
         }
         open override var description: String {
             return "\(SerializeUtil.prepareJSONForSerialization(SharedFolderMetadataSerializer().serialize(self)))"
@@ -7077,6 +7113,7 @@ open class Sharing {
             "owner_team": NullableSerializer(Users.TeamSerializer()).serialize(value.ownerTeam),
             "parent_shared_folder_id": NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
             "path_lower": NullableSerializer(Serialization._StringSerializer).serialize(value.pathLower),
+            "parent_folder_name": NullableSerializer(Serialization._StringSerializer).serialize(value.parentFolderName),
             "link_metadata": NullableSerializer(Sharing.SharedContentLinkMetadataSerializer()).serialize(value.linkMetadata),
             "permissions": NullableSerializer(ArraySerializer(Sharing.FolderPermissionSerializer())).serialize(value.permissions),
             "access_inheritance": Sharing.AccessInheritanceSerializer().serialize(value.accessInheritance),
@@ -7098,10 +7135,11 @@ open class Sharing {
                     let ownerTeam = NullableSerializer(Users.TeamSerializer()).deserialize(dict["owner_team"] ?? .null)
                     let parentSharedFolderId = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .null)
                     let pathLower = NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_lower"] ?? .null)
+                    let parentFolderName = NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_folder_name"] ?? .null)
                     let linkMetadata = NullableSerializer(Sharing.SharedContentLinkMetadataSerializer()).deserialize(dict["link_metadata"] ?? .null)
                     let permissions = NullableSerializer(ArraySerializer(Sharing.FolderPermissionSerializer())).deserialize(dict["permissions"] ?? .null)
                     let accessInheritance = Sharing.AccessInheritanceSerializer().deserialize(dict["access_inheritance"] ?? Sharing.AccessInheritanceSerializer().serialize(.inherit))
-                    return SharedFolderMetadata(accessType: accessType, isInsideTeamFolder: isInsideTeamFolder, isTeamFolder: isTeamFolder, name: name, policy: policy, previewUrl: previewUrl, sharedFolderId: sharedFolderId, timeInvited: timeInvited, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower, linkMetadata: linkMetadata, permissions: permissions, accessInheritance: accessInheritance)
+                    return SharedFolderMetadata(accessType: accessType, isInsideTeamFolder: isInsideTeamFolder, isTeamFolder: isTeamFolder, name: name, policy: policy, previewUrl: previewUrl, sharedFolderId: sharedFolderId, timeInvited: timeInvited, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam, parentSharedFolderId: parentSharedFolderId, pathLower: pathLower, parentFolderName: parentFolderName, linkMetadata: linkMetadata, permissions: permissions, accessInheritance: accessInheritance)
                 default:
                     fatalError("Type error deserializing")
             }
@@ -7112,7 +7150,8 @@ open class Sharing {
     public enum SharedLinkAccessFailureReason: CustomStringConvertible {
         /// User is not logged in.
         case loginRequired
-        /// User's email is not verified.
+        /// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailVerifyRequired
         /// The link is password protected.
         case passwordRequired
@@ -7300,7 +7339,8 @@ open class Sharing {
         /// folder policies to determine the final effective audience type in the `effective_audience` field of
         /// `LinkPermissions.
         public let audience: Sharing.LinkAudience?
-        /// Requested access level you want the audience to gain from this link.
+        /// Requested access level you want the audience to gain from this link. Note, modifying access level for an
+        /// existing link is not supported.
         public let access: Sharing.RequestedLinkAccessLevel?
         public init(requestedVisibility: Sharing.RequestedVisibility? = nil, linkPassword: String? = nil, expires: Date? = nil, audience: Sharing.LinkAudience? = nil, access: Sharing.RequestedLinkAccessLevel? = nil) {
             self.requestedVisibility = requestedVisibility
@@ -7465,7 +7505,8 @@ open class Sharing {
 
     /// User account had a problem preventing this action.
     public enum SharingUserError: CustomStringConvertible {
-        /// The current user must verify the account e-mail address before performing this action.
+        /// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case emailUnverified
         /// An unspecified error.
         case other
@@ -7596,7 +7637,8 @@ open class Sharing {
         case newOwnerNotAMember
         /// The new designated owner has not added the folder to their Dropbox.
         case newOwnerUnmounted
-        /// The new designated owner's e-mail address is unverified.
+        /// The new designated owner's email address is not verified. This functionality is only available on accounts
+        /// with a verified email address. Users can verify their email address here https://www.dropbox.com/help/317.
         case newOwnerEmailUnverified
         /// This action cannot be performed on a team shared folder.
         case teamFolder
@@ -8534,7 +8576,8 @@ open class Sharing {
         argSerializer: Sharing.AddFileMemberArgsSerializer(),
         responseSerializer: ArraySerializer(Sharing.FileMemberActionResultSerializer()),
         errorSerializer: Sharing.AddFileMemberErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let addFolderMember = Route(
@@ -8545,7 +8588,8 @@ open class Sharing {
         argSerializer: Sharing.AddFolderMemberArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Sharing.AddFolderMemberErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let changeFileMemberAccess = Route(
@@ -8556,7 +8600,8 @@ open class Sharing {
         argSerializer: Sharing.ChangeFileMemberAccessArgsSerializer(),
         responseSerializer: Sharing.FileMemberActionResultSerializer(),
         errorSerializer: Sharing.FileMemberActionErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let checkJobStatus = Route(
@@ -8567,7 +8612,8 @@ open class Sharing {
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Sharing.JobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let checkRemoveMemberJobStatus = Route(
@@ -8578,7 +8624,8 @@ open class Sharing {
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Sharing.RemoveMemberJobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let checkShareJobStatus = Route(
@@ -8589,7 +8636,8 @@ open class Sharing {
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Sharing.ShareFolderJobStatusSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let createSharedLink = Route(
@@ -8600,7 +8648,8 @@ open class Sharing {
         argSerializer: Sharing.CreateSharedLinkArgSerializer(),
         responseSerializer: Sharing.PathLinkMetadataSerializer(),
         errorSerializer: Sharing.CreateSharedLinkErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let createSharedLinkWithSettings = Route(
@@ -8611,7 +8660,8 @@ open class Sharing {
         argSerializer: Sharing.CreateSharedLinkWithSettingsArgSerializer(),
         responseSerializer: Sharing.SharedLinkMetadataSerializer(),
         errorSerializer: Sharing.CreateSharedLinkWithSettingsErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getFileMetadata = Route(
@@ -8622,7 +8672,8 @@ open class Sharing {
         argSerializer: Sharing.GetFileMetadataArgSerializer(),
         responseSerializer: Sharing.SharedFileMetadataSerializer(),
         errorSerializer: Sharing.GetFileMetadataErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getFileMetadataBatch = Route(
@@ -8633,7 +8684,8 @@ open class Sharing {
         argSerializer: Sharing.GetFileMetadataBatchArgSerializer(),
         responseSerializer: ArraySerializer(Sharing.GetFileMetadataBatchResultSerializer()),
         errorSerializer: Sharing.SharingUserErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getFolderMetadata = Route(
@@ -8644,7 +8696,8 @@ open class Sharing {
         argSerializer: Sharing.GetMetadataArgsSerializer(),
         responseSerializer: Sharing.SharedFolderMetadataSerializer(),
         errorSerializer: Sharing.SharedFolderAccessErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getSharedLinkFile = Route(
@@ -8655,7 +8708,8 @@ open class Sharing {
         argSerializer: Sharing.GetSharedLinkMetadataArgSerializer(),
         responseSerializer: Sharing.SharedLinkMetadataSerializer(),
         errorSerializer: Sharing.GetSharedLinkFileErrorSerializer(),
-        attrs: ["host": "content",
+        attrs: ["auth": "user",
+                "host": "content",
                 "style": "download"]
     )
     static let getSharedLinkMetadata = Route(
@@ -8666,7 +8720,8 @@ open class Sharing {
         argSerializer: Sharing.GetSharedLinkMetadataArgSerializer(),
         responseSerializer: Sharing.SharedLinkMetadataSerializer(),
         errorSerializer: Sharing.SharedLinkErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let getSharedLinks = Route(
@@ -8677,7 +8732,8 @@ open class Sharing {
         argSerializer: Sharing.GetSharedLinksArgSerializer(),
         responseSerializer: Sharing.GetSharedLinksResultSerializer(),
         errorSerializer: Sharing.GetSharedLinksErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFileMembers = Route(
@@ -8688,7 +8744,8 @@ open class Sharing {
         argSerializer: Sharing.ListFileMembersArgSerializer(),
         responseSerializer: Sharing.SharedFileMembersSerializer(),
         errorSerializer: Sharing.ListFileMembersErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFileMembersBatch = Route(
@@ -8699,7 +8756,8 @@ open class Sharing {
         argSerializer: Sharing.ListFileMembersBatchArgSerializer(),
         responseSerializer: ArraySerializer(Sharing.ListFileMembersBatchResultSerializer()),
         errorSerializer: Sharing.SharingUserErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFileMembersContinue = Route(
@@ -8710,7 +8768,8 @@ open class Sharing {
         argSerializer: Sharing.ListFileMembersContinueArgSerializer(),
         responseSerializer: Sharing.SharedFileMembersSerializer(),
         errorSerializer: Sharing.ListFileMembersContinueErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFolderMembers = Route(
@@ -8721,7 +8780,8 @@ open class Sharing {
         argSerializer: Sharing.ListFolderMembersArgsSerializer(),
         responseSerializer: Sharing.SharedFolderMembersSerializer(),
         errorSerializer: Sharing.SharedFolderAccessErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFolderMembersContinue = Route(
@@ -8732,7 +8792,8 @@ open class Sharing {
         argSerializer: Sharing.ListFolderMembersContinueArgSerializer(),
         responseSerializer: Sharing.SharedFolderMembersSerializer(),
         errorSerializer: Sharing.ListFolderMembersContinueErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFolders = Route(
@@ -8743,7 +8804,8 @@ open class Sharing {
         argSerializer: Sharing.ListFoldersArgsSerializer(),
         responseSerializer: Sharing.ListFoldersResultSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listFoldersContinue = Route(
@@ -8754,7 +8816,8 @@ open class Sharing {
         argSerializer: Sharing.ListFoldersContinueArgSerializer(),
         responseSerializer: Sharing.ListFoldersResultSerializer(),
         errorSerializer: Sharing.ListFoldersContinueErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listMountableFolders = Route(
@@ -8765,7 +8828,8 @@ open class Sharing {
         argSerializer: Sharing.ListFoldersArgsSerializer(),
         responseSerializer: Sharing.ListFoldersResultSerializer(),
         errorSerializer: Serialization._VoidSerializer,
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listMountableFoldersContinue = Route(
@@ -8776,7 +8840,8 @@ open class Sharing {
         argSerializer: Sharing.ListFoldersContinueArgSerializer(),
         responseSerializer: Sharing.ListFoldersResultSerializer(),
         errorSerializer: Sharing.ListFoldersContinueErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listReceivedFiles = Route(
@@ -8787,7 +8852,8 @@ open class Sharing {
         argSerializer: Sharing.ListFilesArgSerializer(),
         responseSerializer: Sharing.ListFilesResultSerializer(),
         errorSerializer: Sharing.SharingUserErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listReceivedFilesContinue = Route(
@@ -8798,7 +8864,8 @@ open class Sharing {
         argSerializer: Sharing.ListFilesContinueArgSerializer(),
         responseSerializer: Sharing.ListFilesResultSerializer(),
         errorSerializer: Sharing.ListFilesContinueErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let listSharedLinks = Route(
@@ -8809,7 +8876,8 @@ open class Sharing {
         argSerializer: Sharing.ListSharedLinksArgSerializer(),
         responseSerializer: Sharing.ListSharedLinksResultSerializer(),
         errorSerializer: Sharing.ListSharedLinksErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let modifySharedLinkSettings = Route(
@@ -8820,7 +8888,8 @@ open class Sharing {
         argSerializer: Sharing.ModifySharedLinkSettingsArgsSerializer(),
         responseSerializer: Sharing.SharedLinkMetadataSerializer(),
         errorSerializer: Sharing.ModifySharedLinkSettingsErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let mountFolder = Route(
@@ -8831,7 +8900,8 @@ open class Sharing {
         argSerializer: Sharing.MountFolderArgSerializer(),
         responseSerializer: Sharing.SharedFolderMetadataSerializer(),
         errorSerializer: Sharing.MountFolderErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let relinquishFileMembership = Route(
@@ -8842,7 +8912,8 @@ open class Sharing {
         argSerializer: Sharing.RelinquishFileMembershipArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Sharing.RelinquishFileMembershipErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let relinquishFolderMembership = Route(
@@ -8853,7 +8924,8 @@ open class Sharing {
         argSerializer: Sharing.RelinquishFolderMembershipArgSerializer(),
         responseSerializer: Async.LaunchEmptyResultSerializer(),
         errorSerializer: Sharing.RelinquishFolderMembershipErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let removeFileMember = Route(
@@ -8864,7 +8936,8 @@ open class Sharing {
         argSerializer: Sharing.RemoveFileMemberArgSerializer(),
         responseSerializer: Sharing.FileMemberActionIndividualResultSerializer(),
         errorSerializer: Sharing.RemoveFileMemberErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let removeFileMember2 = Route(
@@ -8875,7 +8948,8 @@ open class Sharing {
         argSerializer: Sharing.RemoveFileMemberArgSerializer(),
         responseSerializer: Sharing.FileMemberRemoveActionResultSerializer(),
         errorSerializer: Sharing.RemoveFileMemberErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let removeFolderMember = Route(
@@ -8886,7 +8960,8 @@ open class Sharing {
         argSerializer: Sharing.RemoveFolderMemberArgSerializer(),
         responseSerializer: Async.LaunchResultBaseSerializer(),
         errorSerializer: Sharing.RemoveFolderMemberErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let revokeSharedLink = Route(
@@ -8897,7 +8972,8 @@ open class Sharing {
         argSerializer: Sharing.RevokeSharedLinkArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Sharing.RevokeSharedLinkErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let setAccessInheritance = Route(
@@ -8908,7 +8984,8 @@ open class Sharing {
         argSerializer: Sharing.SetAccessInheritanceArgSerializer(),
         responseSerializer: Sharing.ShareFolderLaunchSerializer(),
         errorSerializer: Sharing.SetAccessInheritanceErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let shareFolder = Route(
@@ -8919,7 +8996,8 @@ open class Sharing {
         argSerializer: Sharing.ShareFolderArgSerializer(),
         responseSerializer: Sharing.ShareFolderLaunchSerializer(),
         errorSerializer: Sharing.ShareFolderErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let transferFolder = Route(
@@ -8930,7 +9008,8 @@ open class Sharing {
         argSerializer: Sharing.TransferFolderArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Sharing.TransferFolderErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let unmountFolder = Route(
@@ -8941,7 +9020,8 @@ open class Sharing {
         argSerializer: Sharing.UnmountFolderArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Sharing.UnmountFolderErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let unshareFile = Route(
@@ -8952,7 +9032,8 @@ open class Sharing {
         argSerializer: Sharing.UnshareFileArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Sharing.UnshareFileErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let unshareFolder = Route(
@@ -8963,7 +9044,8 @@ open class Sharing {
         argSerializer: Sharing.UnshareFolderArgSerializer(),
         responseSerializer: Async.LaunchEmptyResultSerializer(),
         errorSerializer: Sharing.UnshareFolderErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let updateFileMember = Route(
@@ -8974,7 +9056,8 @@ open class Sharing {
         argSerializer: Sharing.UpdateFileMemberArgsSerializer(),
         responseSerializer: Sharing.MemberAccessLevelResultSerializer(),
         errorSerializer: Sharing.FileMemberActionErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let updateFolderMember = Route(
@@ -8985,7 +9068,8 @@ open class Sharing {
         argSerializer: Sharing.UpdateFolderMemberArgSerializer(),
         responseSerializer: Sharing.MemberAccessLevelResultSerializer(),
         errorSerializer: Sharing.UpdateFolderMemberErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
     static let updateFolderPolicy = Route(
@@ -8996,7 +9080,8 @@ open class Sharing {
         argSerializer: Sharing.UpdateFolderPolicyArgSerializer(),
         responseSerializer: Sharing.SharedFolderMetadataSerializer(),
         errorSerializer: Sharing.UpdateFolderPolicyErrorSerializer(),
-        attrs: ["host": "api",
+        attrs: ["auth": "user",
+                "host": "api",
                 "style": "rpc"]
     )
 }

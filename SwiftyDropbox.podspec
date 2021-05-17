@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'SwiftyDropbox'
-  s.version      = '5.1.0'
+  s.version      = '7.0.0'
   s.summary      = 'Dropbox Swift SDK for API v2'
   s.homepage     = 'https://dropbox.com/developers/'
   s.license      = 'MIT'
@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.tvos.source_files = 'Source/SwiftyDropbox/SwiftyDropbox/SwiftyDropbox.h', 'Source/SwiftyDropbox/PlatformNeutral/*.{h,m,swift}', 'Source/SwiftyDropbox/PlatformDependent/tvOS/*.{h,m,swift}'
 
   s.requires_arc = true
-  s.swift_version = '4.2'
+  s.swift_version = '5.0'
 
   s.osx.deployment_target = '10.11'
   s.ios.deployment_target = '9.0'
@@ -23,5 +23,5 @@ Pod::Spec.new do |s|
   s.ios.frameworks = 'UIKit', 'WebKit', 'SystemConfiguration', 'Foundation'
   s.tvos.frameworks = 'Foundation'
 
-  s.dependency       'Alamofire', '~> 4.8.2'
+  s.dependency       'Alamofire', '~> 4.9.1'
 end
