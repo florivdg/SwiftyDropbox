@@ -10,12 +10,14 @@ import Foundation
 import SystemConfiguration
 
 extension DropboxClientsManager {
-    public static func authorizeWithAccessToken(accessToken:DropboxAccessToken) {
+    public static func authorizeWithAccessToken(accessToken: String, uid: String, refreshToken: String, tokenExpirationTimestamp: TimeInterval) {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
         precondition(DropboxClientsManager.authorizedClient == nil && DropboxClientsManager.authorizedTeamClient == nil, "A Dropbox client is already authorized")
-        if DropboxOAuthManager.sharedOAuthManager.storeAccessToken(accessToken) {
+        let shortLivedToken = DropboxAccessToken(accessToken: accessToken, uid: uid,
+                                                 refreshToken: refreshToken, tokenExpirationTimestamp: tokenExpirationTimestamp)
+        if DropboxOAuthManager.sharedOAuthManager.storeAccessToken(shortLivedToken) {
             if let token = DropboxOAuthManager.sharedOAuthManager.getFirstAccessToken() {
-                DropboxClientsManager.authorizedClient = DropboxClient(accessToken: token.accessToken)
+                DropboxClientsManager.authorizedClient = DropboxClient.init(accessTokenProvider: DropboxOAuthManager.sharedOAuthManager.accessTokenProviderForToken(token))
             }
         }
     }
