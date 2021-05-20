@@ -10,16 +10,39 @@ import Foundation
 import SystemConfiguration
 
 extension DropboxClientsManager {
+    
+    /// Authorize the `DropboxClientsManager` with a short-lived access token and associated refresh token.
     public static func authorizeWithAccessToken(accessToken: String, uid: String, refreshToken: String, tokenExpirationTimestamp: TimeInterval) {
         precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
         precondition(DropboxClientsManager.authorizedClient == nil && DropboxClientsManager.authorizedTeamClient == nil, "A Dropbox client is already authorized")
+        
+        /// Create DropboxAccessToken
         let shortLivedToken = DropboxAccessToken(accessToken: accessToken, uid: uid,
                                                  refreshToken: refreshToken, tokenExpirationTimestamp: tokenExpirationTimestamp)
+        
+        /// Store the token
         if DropboxOAuthManager.sharedOAuthManager.storeAccessToken(shortLivedToken) {
-            if let token = DropboxOAuthManager.sharedOAuthManager.getFirstAccessToken() {
-                DropboxClientsManager.authorizedClient = DropboxClient.init(accessTokenProvider: DropboxOAuthManager.sharedOAuthManager.accessTokenProviderForToken(token))
-            }
+            /// Create a short-lived access token provider from access token
+            let provider = DropboxOAuthManager.sharedOAuthManager.accessTokenProviderForToken(shortLivedToken)
+            
+            /// Set the authorized client with the given provider
+            DropboxClientsManager.authorizedClient = DropboxClient.init(accessTokenProvider: provider)
         }
+    }
+    
+    /// Authorize the `DropboxClientsManager` with a long-lived legacy access token.
+    public static func authorizeWithAccessToken(accessToken: String, uid: String) {
+        precondition(DropboxOAuthManager.sharedOAuthManager != nil, "Call `DropboxClientsManager.setupWithAppKey` or `DropboxClientsManager.setupWithTeamAppKey` before calling this method")
+        precondition(DropboxClientsManager.authorizedClient == nil && DropboxClientsManager.authorizedTeamClient == nil, "A Dropbox client is already authorized")
+        
+        /// Create DropboxAccessToken
+        let longLivedToken = DropboxAccessToken(accessToken: accessToken, uid: uid)
+        
+        /// Create a long-lived access token provider from access token
+        let provider = DropboxOAuthManager.sharedOAuthManager.accessTokenProviderForToken(longLivedToken)
+        
+        /// Set the authorized client with the given provider
+        DropboxClientsManager.authorizedClient = DropboxClient.init(accessTokenProvider: provider)
     }
     
     public static func setupWithAppKey(_ appKey: String, transportClient: DropboxTransportClient? = nil) {
