@@ -51,10 +51,10 @@ Full documentation [here](http://dropbox.github.io/SwiftyDropbox/api-docs/latest
 
 ## System requirements
 
-- iOS 9.0+
-- macOS 10.11+
+- iOS 10.0+
+- macOS 10.12+
 - Xcode 10.0+ (11.0+ if you use Carthage)
-- Swift 5.0+
+- Swift 5.1+
 
 ## Get Started
 
@@ -134,7 +134,7 @@ To install the Dropbox Swift SDK via Carthage, you need to create a `Cartfile` i
 
 ```
 # SwiftyDropbox
-github "https://github.com/dropbox/SwiftyDropbox" ~> 7.0.1
+github "https://github.com/dropbox/SwiftyDropbox" ~> 8.2.1
 ```
 
 Then, run the following command to install the dependency to checkout and build the Dropbox Swift SDK repository:
@@ -255,25 +255,24 @@ From your view controller:
 import SwiftyDropbox
 
 func myButtonInControllerPressed() {
+    // OAuth 2 code flow with PKCE that grants a short-lived token with scopes, and performs refreshes of the token automatically.
+    let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
+    DropboxClientsManager.authorizeFromControllerV2(
+        UIApplication.shared,
+        controller: self,
+        loadingStatusDelegate: nil,
+        openURL: { (url: URL) -> Void in UIApplication.shared.open(url, options: [:], completionHandler: nil) },
+        scopeRequest: scopeRequest
+    )
 
-    // Use only one of these two flows at once:
-
-    // Legacy authorization flow that grants a long-lived token.
+    // Note: this is the DEPRECATED authorization flow that grants a long-lived token.
+    // If you are still using this, please update your app to use the `authorizeFromControllerV2` call instead.
+    // See https://dropbox.tech/developers/migrating-app-permissions-and-access-tokens
     DropboxClientsManager.authorizeFromController(UIApplication.shared,
                                                   controller: self,
                                                   openURL: { (url: URL) -> Void in
-                                                    UIApplication.shared.openURL(url)
+                                                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
                                                   })
-
-  // New: OAuth 2 code flow with PKCE that grants a short-lived token with scopes.
-  let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
-  DropboxClientsManager.authorizeFromControllerV2(
-      UIApplication.shared,
-      controller: self,
-      loadingStatusDelegate: nil,
-      openURL: { (url: URL) -> Void in UIApplication.shared.openURL(url) },
-      scopeRequest: scopeRequest
-  )
 }
 
 ```
@@ -284,25 +283,24 @@ func myButtonInControllerPressed() {
 import SwiftyDropbox
 
 func myButtonInControllerPressed() {
+    // OAuth 2 code flow with PKCE that grants a short-lived token with scopes, and performs refreshes of the token automatically.
+    let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
+    DropboxClientsManager.authorizeFromControllerV2(
+        sharedWorkspace: NSWorkspace.shared,
+        controller: self,
+        loadingStatusDelegate: nil,
+        openURL: {(url: URL) -> Void in NSWorkspace.shared.open(url)},
+        scopeRequest: scopeRequest
+    )
 
-    // Use only one of these two flows at once:
-
-    // Legacy authorization flow that grants a long-lived token.
+    // Note: this is the DEPRECATED authorization flow that grants a long-lived token.
+    // If you are still using this, please update your app to use the `authorizeFromControllerV2` call instead.
+    // See https://dropbox.tech/developers/migrating-app-permissions-and-access-tokens
     DropboxClientsManager.authorizeFromController(sharedWorkspace: NSWorkspace.shared,
                                                   controller: self,
                                                   openURL: { (url: URL) -> Void in
                                                     NSWorkspace.shared.open(url)
                                                   })
-
-  // New: OAuth 2 code flow with PKCE that grants a short-lived token with scopes.
-  let scopeRequest = ScopeRequest(scopeType: .user, scopes: ["account_info.read"], includeGrantedScopes: false)
-  DropboxClientsManager.authorizeFromControllerV2(
-      sharedWorkspace: NSWorkspace.shared,
-      controller: self,
-      loadingStatusDelegate: nil,
-      openURL: {(url: URL) -> Void in NSWorkspace.shared.open(url)},
-      scopeRequest: scopeRequest
-  )
 }
 ```
 
@@ -359,9 +357,9 @@ func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>)
           }
       }
     }
-    
+
     for context in URLContexts {
-        // stop iterating after the first handle-able url      
+        // stop iterating after the first handle-able url
         if DropboxClientsManager.handleRedirectURL(context.url, completion: oauthCompletion) { break }
     }
 }
@@ -833,9 +831,9 @@ To ensure your changes have not broken any existing functionality, you can run a
 
 ## App Store Connect Privacy Labels
 
-To assist developers using Dropbox SDKs in filling out Apple’s Privacy Practices Questionnaire, we’ve provided the below information on the data that may be collected and used by Dropbox. 
+To assist developers using Dropbox SDKs in filling out Apple’s Privacy Practices Questionnaire, we’ve provided the below information on the data that may be collected and used by Dropbox.
 
-As you complete the questionnaire you should note that the below information is general in nature. Dropbox SDKs are designed to be configured by the developer to incorporate Dropbox functionality as is best suited to their application. As a result of this customizable nature of the Dropbox SDKs, we are unable to provide information on the actual data collection and use for each application. We advise developers reference our Dropbox for HTTP Developers for specifics on how data is collected by each Dropbox API. 
+As you complete the questionnaire you should note that the below information is general in nature. Dropbox SDKs are designed to be configured by the developer to incorporate Dropbox functionality as is best suited to their application. As a result of this customizable nature of the Dropbox SDKs, we are unable to provide information on the actual data collection and use for each application. We advise developers reference our Dropbox for HTTP Developers for specifics on how data is collected by each Dropbox API.
 
 In addition, you should note that the information below only identifies Dropbox’s collection and use of data. You are responsible for identifying your own collection and use of data in your app, which may result in different questionnaire answers than identified below:
 
